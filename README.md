@@ -9,7 +9,7 @@ After installing Python, follow these steps to set up the environment.
     ```
 2. Create a virtual environment (Python 3.13 example)
     ```bash
-    python3.13 -m venv .venv
+    py -3.13 -m venv .venv
     ```
 3. Activate the virtual environment
     - Windows
