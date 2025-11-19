@@ -14,7 +14,7 @@ After installing Python, follow these steps to set up the environment.
 3. Activate the virtual environment
     - Windows
         ```bash
-        source .venv/Scripts/activate
+        .venv/Scripts/activate
         ```
     - macOS/Linux
         ```bash
