@@ -1,24 +1,27 @@
-# ImageTweaks
+# Image Tweaks
+## Introduction
+<b>Image Tweaks</b> enables you to easily optimize, convert, resize images using CLI.<br>
+Image Tweaks runs on locally, not requiring an internet connection or cloud upload.
 ## Installation
-> ImageTweaks requires <b>Python 3.9</b> up to <b>Python 3.13.9</b>.<br>
-After installing Python, follow these steps to set up the environment.
+> Image Tweaks requires <b>Python 3.9</b> up to <b>Python 3.13.9</b>.<br>
+>After installing Python, follow these steps to set up the environment.
 1. Clone the repository
     ```bash
     git clone https://github.com/HaeengIn/ImageTweaks
     cd ImageTweaks
     ```
-2. Create a virtual environment (Python 3.13 example)
+2. Create a virtual environment
     ```bash
-    py -3.13 -m venv .venv
+    py <your_python_version> -m venv <your_virtual_environment_name>
     ```
 3. Activate the virtual environment
     - Windows
         ```bash
-        .venv/Scripts/activate
+        <your_virtual_environment_name>/Scripts/activate
         ```
     - macOS/Linux
         ```bash
-        source .venv/bin/activate
+        source <your_virtual_environment_name>/bin/activate
         ```
 4. Install the required packages
     ```bash
@@ -29,6 +32,6 @@ After installing Python, follow these steps to set up the environment.
     python app.py
     ```
 ## License
-This program is protected under the CC BY-NC-SA 4.0 license.
+Image Tweaks is protected under the CC BY-NC-SA 4.0 license.
 
 <small style="color: gray">Copyright &copy; 2025 HaeengIn. All rights reserved.</small>
