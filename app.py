@@ -1,8 +1,21 @@
-from process import *
+import process, os
+
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 # Run the single process
 def run_single_process():
-    pass
+    print("[ Single Process ]")
+    print("Select process from the menu below.")
+    print("[ Compress ]")
+    while True:
+        input_process = input("> ").strip().lower()
+        if input_process == "compress":
+            clear_console()
+            process.single.compress.run_optimization()
+            break
+        else:
+            print("Invalid Input.")
 
 # Run the multiple process
 def run_multiple_process():
@@ -33,8 +46,10 @@ def main():
         process_type = input("> ").strip().lower()
         if process_type in ["single", "multiple", "wiki", "tips", "info", "exit"]:
             if process_type == "single":
+                clear_console()
                 run_single_process()
             else:
+                clear_console()
                 run_multiple_process()
             break
         else:
