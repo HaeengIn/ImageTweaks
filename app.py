@@ -39,9 +39,10 @@ def exit_app():
 
 # Run the app
 def main():
+    clear_console()
     print("\n[ Image Tweaks ]")
     print("Type and enter the menu option what you want to do.")
-    print("[ Single / Multiple / Wiki / Tips / Info / Exit]")
+    print("[ Single / Multiple / Wiki / Tips / Info / Exit ]")
     while True:
         process_type = input("> ").strip().lower()
         if process_type in ["single", "multiple", "wiki", "tips", "info", "exit"]:
