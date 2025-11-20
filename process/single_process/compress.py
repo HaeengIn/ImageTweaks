@@ -9,7 +9,7 @@ def get_input_image_path():
         if os.path.isfile(input_image_path):
             return input_image_path
         else:
-            print("Invalid Input. Caanot find the image: {input_image_path}")
+            print(f"Invalid Input. Caanot find the image: {input_image_path}")
 
 # Get the path of output image file
 def get_output_image_path():
@@ -22,7 +22,7 @@ def get_output_image_path():
 def get_optimization_quality():
     while True:
         print("\nEnter the optimization quality (0~100)")
-        optimization_quality = int(input("> ")).strip()
+        optimization_quality = int(input("> "))
         try:
             if 0 <= optimization_quality <= 95:
                 return optimization_quality
