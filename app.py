@@ -9,10 +9,25 @@ def run_single_process():
     print("Select process from the menu below.")
     print("[ Compress ]")
     while True:
-        input_process = input("> ").strip().lower()
+        input_process = input("\n> ").strip().lower()
         if input_process == "compress":
             clear_console()
-            process.single.compress.run_optimization()
+            while True:
+                process.single.compress.run_optimization()
+                while True:
+                    print("\nDo you want to optimize another image? (Y/N)")
+                    another_optimization = input("> ").strip().lower()
+                    if another_optimization in ["y", "n"]:
+                        break
+                    else:
+                        print("Invalid Input. Please enter Y or N.")
+                if another_optimization == "y":
+                    clear_console()
+                    continue
+                elif another_optimization == "n":
+                    clear_console()
+                    break
+            main()
             break
         else:
             print("Invalid Input.")
@@ -40,7 +55,7 @@ def exit_app():
 # Run the app
 def main():
     clear_console()
-    print("\n[ Image Tweaks ]")
+    print("[ Image Tweaks ]")
     print("Type and enter the menu option what you want to do.")
     print("[ Single / Multiple / Wiki / Tips / Info / Exit ]")
     while True:
