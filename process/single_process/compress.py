@@ -12,25 +12,27 @@ def get_input_image_path():
             print(f"Invalid Input. Caanot find the image: {input_image_path}")
 
 # Get the path of output image file
-def get_output_image_path():
+def get_output_image_path(input_image_path):
     while True:
         print("\nEnter the path of output image file")
         output_image_path = input("> ").strip().strip('"')
-        return output_image_path
+        if os.path.isdir(output_image_path):
+            base_name = os.path.basename(input_image_path)
+            name, extension = os.path.splitext(base_name)
+            output_file_name = f"{name}{extension}"
+            output_image_path = os.path.join(output_image_path, output_file_name)
+            return output_image_path
+        else:
+            print(f"Invalid folder path: {output_image_path}")
 
 # Get integer value of optimization quality
 def get_optimization_quality():
     while True:
         print("\nEnter the optimization quality (0~100)")
-        optimization_quality = int(input("> "))
+        optimization_quality = input("> ")
         try:
-            if 0 <= optimization_quality <= 95:
-                return optimization_quality
-            elif optimization_quality >= 96:
-                optimization_quality = "keep"
-                return optimization_quality
-            else:
-                print("Invalid Input. Please enter a integar value between 0 and 100")
+            optimization_quality = int(optimization_quality)
+            return optimization_quality
         except ValueError:
             print("Invalid Input. Please enter a integar value between 0 and 100")
 
@@ -55,7 +57,7 @@ def optimize_and_save(input_image_path, output_image_path, optimization_quality)
 
 def run_optimization():
     input_image_path = get_input_image_path()
-    output_image_path = get_output_image_path()
+    output_image_path = get_output_image_path(input_image_path)
     optimization_quality = get_optimization_quality()
     print("-" * 30)
 
@@ -69,13 +71,15 @@ def run_optimization():
             else:
                 print("Invalid Input. Please enter Y or N")
         if make_new_folder == "y":
+            original_folder = os.path.dirname(input_image_path)
             new_folder_name = "Optimized Images"
-            os.makedirs("Optimized Images", exit_ok=True)
+            new_folder_path = os.path.join(original_folder, new_folder_name)
+            os.makedirs(new_folder_path, exist_ok=True)
             base_name = os.path.basename(input_image_path)
-            output_image_path = os.path.join(new_folder_name, base_name)
-            print(f"Image will be saved at '{output_image_path}'.")
+            output_image_path = os.path.join(new_folder_path, base_name)
+            print(f"\nImage will be saved at '{output_image_path}'.")
         else:
-            print(f"Image will be saved at {output_image_path}, overwriting original image.")
+            print(f"\nImage will be saved at {output_image_path}, overwriting original image.")
         optimize_and_save(input_image_path, output_image_path, optimization_quality)
 
     # If output image path is different from input image path
