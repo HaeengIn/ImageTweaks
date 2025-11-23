@@ -59,10 +59,11 @@ def run_optimization():
     input_image_path = get_input_image_path()
     output_image_path = get_output_image_path(input_image_path)
     optimization_quality = get_optimization_quality()
-    print("-" * 30)
+    input_folder = os.path.dirname(os.path.abspath(input_image_path))
+    output_folder = os.path.dirname(os.path.abspath(output_image_path))
 
     # If output image path is same as input image path
-    if input_image_path == output_image_path:
+    if input_folder == output_folder:
         while True:
             print("\nDo you want to make a new folder? (Y/N)")
             make_new_folder = input("> ").strip().lower()
@@ -71,21 +72,15 @@ def run_optimization():
             else:
                 print("Invalid Input. Please enter Y or N")
         if make_new_folder == "y":
-            original_folder = os.path.dirname(input_image_path)
             new_folder_name = "Optimized Images"
             new_folder_path = os.path.join(original_folder, new_folder_name)
             os.makedirs(new_folder_path, exist_ok=True)
-            base_name = os.path.basename(input_image_path)
+            base_name = os.path.basename(output_image_path)
             output_image_path = os.path.join(new_folder_path, base_name)
             print(f"\nImage will be saved at '{output_image_path}'.")
+            print("-" * 30)
         else:
             print(f"\nImage will be saved at {output_image_path}, overwriting original image.")
-        optimize_and_save(input_image_path, output_image_path, optimization_quality)
-
-    # If output image path is different from input image path
-    else:
-        process_success = optimize_and_save(input_image_path, output_image_path, optimization_quality)
-        if process_success:
             while True:
                 print("Delete original image? (Y/N)")
                 delete_original_image = input("> ").strip().lower()
@@ -95,9 +90,15 @@ def run_optimization():
                     print("Invalid Input. Please enter Y or N")
             if delete_original_image == "y":
                 try:
-                    os.remove(input_image_path)
-                    print("Original image has been deleted.")
+                    print("Original image will be deleted.")
+                    optimize_and_save(input_image_path, output_image_path, optimization_quality)
                 except Exception as e:
                     print(f"Error occurred while deleting original image: {e}")
             else:
-                pass
+                
+        optimize_and_save(input_image_path, output_image_path, optimization_quality)
+
+    # If output image path is different from input image path
+    else:
+        optimize_and_save(input_image_path, output_image_path, optimization_quality)
+            
