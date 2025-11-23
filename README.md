@@ -19,7 +19,7 @@ Image Tweaks runs on locally, not requiring an internet connection or cloud uplo
 3. Activate the virtual environment
     - Windows
         ```bash
-        <your_virtual_environment_name>/Scripts/activate
+        source <your_virtual_environment_name>/Scripts/activate
         ```
     - macOS/Linux
         ```bash
