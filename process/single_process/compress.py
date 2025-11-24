@@ -1,6 +1,7 @@
 from PIL import Image
 import os
 
+
 # Get the path of original imaghe file from user
 def get_input_image_path():
     while True:
@@ -12,6 +13,7 @@ def get_input_image_path():
             return input_image_path
         else:
             print(f"Invalid Input. Caanot find the image: {input_image_path}")
+
 
 # Get the path of output image file
 def get_output_image_path(input_image_path):
@@ -29,6 +31,7 @@ def get_output_image_path(input_image_path):
             return output_image_path
         else:
             print(f"Invalid folder path: {output_image_path}")
+
 
 # Get integer value of optimization quality
 def get_optimization_quality():
@@ -48,6 +51,7 @@ def get_optimization_quality():
             print("Invalid Input. Please enter a integar value between 0 and 100")
             continue
 
+
 # Optimize image and save
 def optimize_and_save(input_image_path, output_image_path, optimization_quality):
     try:
@@ -55,10 +59,15 @@ def optimize_and_save(input_image_path, output_image_path, optimization_quality)
         with Image.open(input_image_path) as img:
             # Convert RGBA to RGB when saving as JPEG
             image_to_save = img
-            if output_image_path.lower().endswith((".jpg", ".jpeg")) and img.mode in ("RGBA", "P"):
+            if output_image_path.lower().endswith((".jpg", ".jpeg")) and img.mode in (
+                "RGBA",
+                "P",
+            ):
                 image_to_save = img.convert("RGB")
             # Save image
-            image_to_save.save(output_image_path, optimize=True, quality=optimization_quality)
+            image_to_save.save(
+                output_image_path, optimize=True, quality=optimization_quality
+            )
             optimized_size = os.path.getsize(output_image_path)
             print("\nSuccessfully optimized!")
             print(f"{original_size} bytes -> {optimized_size} bytes")
@@ -67,13 +76,24 @@ def optimize_and_save(input_image_path, output_image_path, optimization_quality)
         print(f"Error occurred while optimizing image: {e}")
         return False
 
-def run_optimization():
-    input_image_path = get_input_image_path() # Get the path of original imaghe file from user
-    output_image_path = get_output_image_path(input_image_path) # Get the path of folder of optimized image from user
-    optimization_quality = get_optimization_quality() # Get the integer value of optimization quality from user
 
-    input_folder = os.path.dirname(os.path.abspath(input_image_path)) # Get the path of folder of original image
-    output_folder = os.path.dirname(os.path.abspath(output_image_path)) # Get the path of folder of optimized image
+def run_optimization():
+    input_image_path = (
+        get_input_image_path()
+    )  # Get the path of original imaghe file from user
+    output_image_path = get_output_image_path(
+        input_image_path
+    )  # Get the path of folder of optimized image from user
+    optimization_quality = (
+        get_optimization_quality()
+    )  # Get the integer value of optimization quality from user
+
+    input_folder = os.path.dirname(
+        os.path.abspath(input_image_path)
+    )  # Get the path of folder of original image
+    output_folder = os.path.dirname(
+        os.path.abspath(output_image_path)
+    )  # Get the path of folder of optimized image
 
     # If output image path is same as input image path
     if input_folder == output_folder:
@@ -94,10 +114,12 @@ def run_optimization():
             output_image_path = os.path.join(new_folder_path, base_name)
             print(f"\nImage will be saved at '{output_image_path}'.")
             print("-" * 30)
-        
+
         # If new folder will be not created: ask if the original image will be deleted
         else:
-            print(f"\nImage will be saved at {output_image_path}, overwriting original image.")
+            print(
+                f"\nImage will be saved at {output_image_path}, overwriting original image."
+            )
             while True:
                 print("Delete original image? (Y/N)")
                 delete_original_image = input("> ").strip().lower()
@@ -110,7 +132,9 @@ def run_optimization():
             if delete_original_image == "y":
                 try:
                     print("Original image will be deleted.")
-                    optimize_and_save(input_image_path, output_image_path, optimization_quality)
+                    optimize_and_save(
+                        input_image_path, output_image_path, optimization_quality
+                    )
                 except Exception as e:
                     print(f"Error occurred while deleting original image: {e}")
             else:
@@ -119,11 +143,13 @@ def run_optimization():
                 optimized_name = f"{name}_optimized{extension}"
                 output_image_path = os.path.join(input_folder, optimized_name)
                 print(f"Compressed imaged will be saved as: {optimized_name}")
-                optimize_and_save(input_image_path, output_image_path, optimization_quality)
+                optimize_and_save(
+                    input_image_path, output_image_path, optimization_quality
+                )
                 return
         # If new folder was created: optimize and save normally
         optimize_and_save(input_image_path, output_image_path, optimization_quality)
 
-    # If output image path is different from input image path: optimized and save 
+    # If output image path is different from input image path: optimized and save
     else:
         optimize_and_save(input_image_path, output_image_path, optimization_quality)
