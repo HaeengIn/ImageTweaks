@@ -1,7 +1,9 @@
 import process, os
 
+
 def clear_console():
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system("cls" if os.name == "nt" else "clear")
+
 
 # Run the single process
 def run_single_process():
@@ -32,25 +34,31 @@ def run_single_process():
         else:
             print("Invalid Input.")
 
+
 # Run the multiple process
 def run_multiple_process():
     pass
+
 
 # Open Wiki page
 def open_wiki():
     pass
 
+
 # Open Tips page
 def open_tips():
     pass
+
 
 # Open Info page
 def open_info():
     pass
 
+
 # Exit the app
 def exit_app():
     pass
+
 
 # Run the app
 def main():
@@ -70,6 +78,7 @@ def main():
             break
         else:
             print("Invalid Input. Please enter 'Single' or 'Multiple'")
+
 
 if __name__ == "__main__":
     main()
