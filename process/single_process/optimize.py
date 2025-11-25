@@ -24,20 +24,8 @@ def get_output_image_path(input_image_path):
         # If user entered nothing or Root Folder
         if output_image_path in ["/", ""]:
             print("Cannot save optimized image at Root Folder. Please enter other folder.")
-        # If the folder that user entered exist: set the path of output image and return
-        elif os.path.isdir(output_image_path):
-            base_name = os.path.basename(input_image_path)
-            name, extension = os.path.splitext(base_name)
-            output_file_name = f"{name}{extension}"
-            output_image_path = os.path.join(output_image_path, output_file_name)
-            return output_image_path
         # If the folder that user entered doesn't exist: create new folder, set the path of output image, and return
         else:
-            os.makedirs(output_image_path, exists_ok=True)
-            base_name = os.path.basename(input_image_path)
-            name, extension = os.path.splitext(base_name)
-            output_file_name = f"{name}{extension}"
-            output_image_path = os.path.join(output_image_path, output_file_name)
             return output_image_path
 
 
@@ -142,10 +130,10 @@ def run_optimization():
         # If new folder weill be created: ask if the original image will be deleted
         if make_new_folder == "y":
             new_folder_name = "Optimized Images"
-            new_folder_path = os.path.join(input_folder, new_folder_name)
-            os.makedirs(new_folder_path, exist_ok=True)
+            final_output_folder = os.path.join(input_folder, new_folder_name)
+            os.makedirs(final_output_folder, exist_ok=True)
             base_name = os.path.basename(output_image_path)
-            output_image_path = os.path.join(new_folder_path, base_name)
+            output_image_path = os.path.join(final_output_path, base_name)
             print(f"\nImage will be saved at '{output_image_path}'.")
             print()
             print("-" * 30)
@@ -187,4 +175,9 @@ def run_optimization():
 
     # If output image path is different from input image path: optimized and save
     else:
+        os.makedirs(output_image_path, exists_ok=True)
+        base_name = os.path.basename(input_image_path)
+        name, extension = os.path.splitext(base_name)
+        output_file_name = f"{name}{extension}"
+        output_image_path = os.path.join(output_image_path, output_file_name)
         optimize_and_save(input_image_path, output_image_path, optimization_quality)
