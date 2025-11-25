@@ -86,7 +86,7 @@ def optimize_and_save(input_image_path, output_image_path, optimization_quality)
             else:
                 # Other formats (ex: GIF, BMP, Tiff, etc): ignore 'quality' and apply basic optimization
                 print(
-                    f"Note: '{output_extension}' format does not effectively support 'quality' setting. Applying basic optimization."
+                    f"\nNote: '{output_extension}' format does not effectively support 'quality' setting. Applying basic optimization."
                 )
                 image_to_save = img
 

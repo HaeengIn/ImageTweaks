@@ -11,7 +11,7 @@ def run_single_process():
     print("Select process from the menu below.")
     print("[ Optimize ]")
     while True:
-        input_process = input("\n> ").strip().lower()
+        input_process = input("> ").strip().lower()
         if input_process in ["optimize"]:
             break
         else:
