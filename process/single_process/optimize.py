@@ -21,16 +21,24 @@ def get_output_image_path(input_image_path):
         print("\nEnter the path of output image file")
         output_image_path = input("> ").strip().strip('"')
 
-        # Check if the folder exists
-        # If the folder exists: set the name and path of the optimized image
-        if os.path.isdir(output_image_path):
+        # If user entered nothing or Root Folder
+        if output_image_path in ["/", ""]:
+            print("Cannot save optimized image at Root Folder. Please enter other folder.")
+        # If the folder that user entered exist: set the path of output image and return
+        elif os.path.isdir(output_image_path):
             base_name = os.path.basename(input_image_path)
             name, extension = os.path.splitext(base_name)
             output_file_name = f"{name}{extension}"
             output_image_path = os.path.join(output_image_path, output_file_name)
             return output_image_path
+        # If the folder that user entered doesn't exist: create new folder, set the path of output image, and return
         else:
-            print(f"Invalid folder path: {output_image_path}")
+            os.makedirs(output_image_path, exists_ok=True)
+            base_name = os.path.basename(input_image_path)
+            name, extension = os.path.splitext(base_name)
+            output_file_name = f"{name}{extension}"
+            output_image_path = os.path.join(output_image_path, output_file_name)
+            return output_image_path
 
 
 # Get integer value of optimization quality
