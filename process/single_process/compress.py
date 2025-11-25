@@ -57,21 +57,47 @@ def optimize_and_save(input_image_path, output_image_path, optimization_quality)
     try:
         original_size = os.path.getsize(input_image_path)
         with Image.open(input_image_path) as img:
-            # Convert RGBA to RGB when saving as JPEG
-            image_to_save = img
-            if output_image_path.lower().endswith((".jpg", ".jpeg")) and img.mode in (
-                "RGBA",
-                "P",
-            ):
-                image_to_save = img.convert("RGB")
+
+            # Export extension and convert to lowercase
+            output_extension = os.path.splitext(output_image_path)[1].lower()
+
+            # Reset params that will be used when saving
+            save_params = {"optimize": True}
+
+            # Process optimization by format
+            if output_extension in (".jpg", ".jpeg"):
+                # JPEG: Use 'quality' params (0-100)
+                # Convert RGBA to RGB when saving as JPEG
+                image_to_save = img
+                if img.mode in ("RGBA", "P"):
+                    image_to_save = img.convert("RGB")
+
+                save_params["quality"] = optimization_quality
+
+            elif output_extension == ".png":
+                # PNG: Use 'optimize_level' params (0-9)
+                # Convert quality (0~100) to optimize_level (0~9)
+                optimize_level = int(optimization_quality / 100 * 9)  # Convert to 0~9
+                save_params["optimize_level"] = optimize_level
+                image_to_save = (
+                    img  # PNG: Doesn't need to convert as it supports transparency
+                )
+
+            else:
+                # Other formats (ex: GIF, BMP, Tiff, etc): ignore 'quality' and apply basic optimization
+                print(
+                    f"Note: '{output_extension}' format does not effectively support 'quality' setting. Applying basic optimization."
+                )
+                image_to_save = img
+
             # Save image
-            image_to_save.save(
-                output_image_path, optimize=True, quality=optimization_quality
-            )
+            image_to_save.save(output_image_path, **save_params)
+
             optimized_size = os.path.getsize(output_image_path)
             print("\nSuccessfully optimized!")
             print(f"{original_size} bytes -> {optimized_size} bytes")
             return True
+
     except Exception as e:
         print(f"Error occurred while optimizing image: {e}")
         return False
@@ -113,6 +139,7 @@ def run_optimization():
             base_name = os.path.basename(output_image_path)
             output_image_path = os.path.join(new_folder_path, base_name)
             print(f"\nImage will be saved at '{output_image_path}'.")
+            print()
             print("-" * 30)
 
         # If new folder will be not created: ask if the original image will be deleted
@@ -142,7 +169,7 @@ def run_optimization():
                 name, extension = os.path.splitext(base_name)
                 optimized_name = f"{name}_optimized{extension}"
                 output_image_path = os.path.join(input_folder, optimized_name)
-                print(f"Compressed imaged will be saved as: {optimized_name}")
+                print(f"Optimized image will be saved as: {optimized_name}")
                 optimize_and_save(
                     input_image_path, output_image_path, optimization_quality
                 )
