@@ -9,30 +9,31 @@ def clear_console():
 def run_single_process():
     print("[ Single Process ]")
     print("Select process from the menu below.")
-    print("[ Compress ]")
+    print("[ Optimize ]")
     while True:
         input_process = input("\n> ").strip().lower()
-        if input_process == "compress":
-            clear_console()
-            while True:
-                process.single.optimize.run_optimization()
-                while True:
-                    print("\nDo you want to optimize another image? (Y/N)")
-                    another_optimization = input("> ").strip().lower()
-                    if another_optimization in ["y", "n"]:
-                        break
-                    else:
-                        print("Invalid Input. Please enter Y or N.")
-                if another_optimization == "y":
-                    clear_console()
-                    continue
-                elif another_optimization == "n":
-                    clear_console()
-                    break
-            main()
+        if input_process in ["optimize"]:
             break
         else:
             print("Invalid Input.")
+    if input_process == "optimize":
+        clear_console()
+        while True:
+            process.single.optimize.run_optimization()
+            while True:
+                print("\nDo you want to optimize another image? (Y/N)")
+                another_optimization = input("> ").strip().lower()
+                if another_optimization in ["y", "n"]:
+                    break
+                else:
+                    print("Invalid Input. Please enter Y or N.")
+            if another_optimization == "y":
+                clear_console()
+                continue
+            elif another_optimization == "n":
+                clear_console()
+                break
+        main()
 
 
 # Run the multiple process
