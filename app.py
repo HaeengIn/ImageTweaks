@@ -15,7 +15,7 @@ def run_single_process():
         if input_process == "compress":
             clear_console()
             while True:
-                process.single.compress.run_optimization()
+                process.single.optimize.run_optimization()
                 while True:
                     print("\nDo you want to optimize another image? (Y/N)")
                     another_optimization = input("> ").strip().lower()

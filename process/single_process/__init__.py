@@ -1,1 +1,1 @@
-from . import compress
+from . import optimize
