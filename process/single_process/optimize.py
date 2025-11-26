@@ -73,12 +73,12 @@ def optimize_and_save(input_image_path, output_image_path, optimization_quality)
 
             # Reset params that will be used when saving
             save_params = {"optimize": True}
+            image_to_save = img
 
             # Process optimization by format
             if output_extension in (".jpg", ".jpeg"):
                 # JPEG: Use 'quality' params (0-100)
                 # Convert RGBA to RGB when saving as JPEG
-                image_to_save = img
                 if img.mode in ("RGBA", "P"):
                     image_to_save = img.convert("RGB")
 
@@ -89,14 +89,11 @@ def optimize_and_save(input_image_path, output_image_path, optimization_quality)
                 # Convert quality (0~100) to optimize_level (0~9)
                 optimize_level = int(optimization_quality / 100 * 9)  # Convert to 0~9
                 save_params["optimize_level"] = optimize_level
-                image_to_save = (
-                    img  # PNG: Doesn't need to convert as it supports transparency
-                )
 
             else:
                 # Other formats (ex: GIF, BMP, Tiff, etc): ignore 'quality' and apply basic optimization
                 print(
-                    f"\nNote: '{output_extension}' format does not effectively support 'quality' setting. Applying basic optimization."
+                    f"\n{output_extension} format does not effectively support quality setting. Saving without compression parameters."
                 )
                 image_to_save = img
 
