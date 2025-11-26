@@ -23,7 +23,9 @@ def get_output_image_path(input_image_path):
 
         # If user entered nothing or Root Folder
         if output_image_path in ["/", ""]:
-            print("Cannot save optimized image at Root Folder. Please enter other folder.")
+            print(
+                "Cannot save optimized image at Root Folder. Please enter other folder."
+            )
         # If the folder that user entered doesn't exist: create new folder, set the path of output image, and return
         else:
             return output_image_path
