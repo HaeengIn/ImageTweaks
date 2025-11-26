@@ -58,7 +58,7 @@ def get_optimization_quality():
             else:
                 print("Invalid Input. Please enter a integer value betwenn 0 and 100")
         except ValueError:
-            print("Invalid Input. Please enter a integar value between 0 and 100")
+            print("Invalid Input. Please enter a integer value between 0 and 100")
             continue
 
 
