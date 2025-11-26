@@ -33,6 +33,7 @@ def get_output_image_path():
             print(
                 "Cannot save optimized image at Root Folder. Please enter other folder."
             )
+            continue
 
         # If user didn't entered folder
         if os.path.splitext(output_image_path)[1] != "":
