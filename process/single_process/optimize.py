@@ -102,11 +102,14 @@ def optimize_and_save(input_image_path, output_image_path, optimization_quality)
 
 def run_optimization():
     input_image_path = get_input_image_path()  # Get the path of original imaghe file from user
-    output_image_path = get_output_image_path(input_image_path)  # Get the path of folder of optimized image from user
+    output_folder = get_output_image_path()  # Get the path of folder of optimized image from user
     optimization_quality = get_optimization_quality()  # Get the integer value of optimization quality from user
 
     input_folder = os.path.dirname(os.path.abspath(input_image_path))  # Get the path of folder of original image
-    output_folder = os.path.dirname(os.path.abspath(output_image_path))  # Get the path of folder of optimized image
+
+    # If output folder doesn't same as input folder: make output folder
+    if not input_folder == output_folder:
+        os.makedirs(output_folder, exist_ok=True)
 
     # If output image path is same as input image path
     if input_folder == output_folder:
@@ -123,46 +126,46 @@ def run_optimization():
             new_folder_name = "Optimized Images"
             final_output_folder = os.path.join(input_folder, new_folder_name)
             os.makedirs(final_output_folder, exist_ok=True)
-            base_name = os.path.basename(output_image_path)
+
+            base_name = make_output_filename(input_image_path)
             output_image_path = os.path.join(final_output_folder, base_name)
-            print(f"\nImage will be saved at '{output_image_path}'.")
-            print()
+
+            print(f"\nImage will be saved at '{output_image_path}'.\n")
             print("-" * 30)
+            optimize_and_save(input_image_path, output_image_path, optimization_quality)
 
         # If new folder will be not created: ask if the original image will be deleted
         else:
             print(f"\nImage will be saved at {output_image_path}, overwriting original image.")
+
             while True:
                 print("Delete original image? (Y/N)")
                 delete_original_image = input("> ").strip().lower()
                 if delete_original_image in ["y", "n"]:
                     break
                 else:
-                    print("Invalid Input. Please enter Y or N")
+                    print("Invalid Input. Please enter Y or N.")
 
-            # If original image will be deleted: optimize and save (optimized image will overwrite original image)
             if delete_original_image == "y":
-                try:
-                    print("Original image will be deleted.")
-                    optimize_and_save(input_image_path, output_image_path, optimization_quality)
-                except Exception as e:
-                    print(f"Error occurred while deleting original image: {e}")
+                temporary_output = make_output_filename(input_image_path, "_optimized")
+                temporary_path = os.path.join(input_folder, temporary_output)
+
+                success = optimize_and_save(input_image_path, output_image_path, optimization_quality)
+                if success:
+                    os.remove(input_image_path)
+                    os.rename(temporary_path, input_image_path)
+                    print("original image has been deleted and replaced successfully.")
+                else:
+                    print("Optimization failed. Original image NOT deleted.")
+        
             else:
-                base_name = os.path.basename(input_image_path)
-                name, extension = os.path.splitext(base_name)
-                optimized_name = f"{name}_optimized{extension}"
-                output_image_path = os.path.join(input_folder, optimized_name)
-                print(f"Optimized image will be saved as: {optimized_name}")
+                output_name = make_output_filename(input_image_path, "_optimized")
+                output_image_path = os.path.join(input_folder, output_name)
+                print(f"Optimized image will be saved as: {output_name}")
                 optimize_and_save(input_image_path, output_image_path, optimization_quality)
-                return
-        # If new folder was created: optimize and save normally
-        optimize_and_save(input_image_path, output_image_path, optimization_quality)
 
     # If output image path is different from input image path: optimized and save
     else:
-        os.makedirs(output_image_path, exists_ok=True)
-        base_name = os.path.basename(input_image_path)
-        name, extension = os.path.splitext(base_name)
-        output_file_name = f"{name}{extension}"
-        output_image_path = os.path.join(output_image_path, output_file_name)
-        optimize_and_save(input_image_path, output_image_path, optimization_quality)
+        base_name = make_output_filename(input_image_path)
+        final_output_path = os.path.join(output_folder, base_name)
+        optimize_and_save(input_image_path, final_output_path, optimization_quality)
