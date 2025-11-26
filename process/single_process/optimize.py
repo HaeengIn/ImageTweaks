@@ -2,6 +2,13 @@ from PIL import Image
 import os
 
 
+# Function for making new folder
+def make_output_filename(input_image_path, custom_suffix=""):
+    base_name = os.path.basename(input_image_path)
+    name, extension = os.path.splitext(base_name)
+    return f"{name}{custom_suffix}{extension}"
+
+
 # Get the path of original imaghe file from user
 def get_input_image_path():
     while True:
