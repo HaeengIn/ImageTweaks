@@ -133,7 +133,7 @@ def run_optimization():
             final_output_folder = os.path.join(input_folder, new_folder_name)
             os.makedirs(final_output_folder, exist_ok=True)
             base_name = os.path.basename(output_image_path)
-            output_image_path = os.path.join(final_output_path, base_name)
+            output_image_path = os.path.join(final_output_folder, base_name)
             print(f"\nImage will be saved at '{output_image_path}'.")
             print()
             print("-" * 30)
