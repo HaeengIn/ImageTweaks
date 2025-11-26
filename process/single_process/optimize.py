@@ -102,7 +102,7 @@ def optimize_and_save(input_image_path, output_image_path, optimization_quality)
 
             optimized_size = os.path.getsize(output_image_path)
             print("\nSuccessfully optimized!")
-            print(f"{original_size} bytes -> {optimized_size} bytes")
+            print(f"{original_size} bytes --> {optimized_size} bytes")
             return True
 
     except Exception as e:
