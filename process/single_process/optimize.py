@@ -148,6 +148,7 @@ def run_optimization():
                 else:
                     print("Invalid Input. Please enter Y or N.")
 
+            # If original image will be deleted: optimize to temporary file, delete original, and rename temporary file
             if delete_original_image == "y":
                 temporary_output = make_output_filename(input_image_path, "_optimized")
                 temporary_path = os.path.join(input_folder, temporary_output)
@@ -159,7 +160,8 @@ def run_optimization():
                     print("original image has been deleted and replaced successfully.")
                 else:
                     print("Optimization failed. Original image NOT deleted.")
-        
+
+            # If original image will be not deleted: optimize and save with different name
             else:
                 output_name = make_output_filename(input_image_path, "_optimized")
                 output_image_path = os.path.join(input_folder, output_name)
