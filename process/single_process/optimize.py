@@ -20,22 +20,22 @@ def get_input_image_path():
             print(f"Invalid Input. Caanot find the image: {input_image_path}")
 
 # Get the path of output image file
-def get_output_image_path():
+def get_output_folder():
     while True:
         print("\nEnter the path of output image file")
-        output_image_path = input("> ").strip().strip('"')
+        output_folder = input("> ").strip().strip('"')
 
         # If user entered nothing or Root Folder
-        if output_image_path in ["/", ""]:
+        if output_folder in ["/", ""]:
             print("Cannot save optimized image at Root Folder. Please enter other folder.")
             continue
 
         # If user didn't entered folder
-        if os.path.splitext(output_image_path)[1] != "":
+        if os.path.splitext(output_folder)[1] != "":
             print("Please enter a FOLDER path, not an image path.")
             continue
 
-        return output_image_path
+        return output_folder
 
 # Get integer value of optimization quality
 def get_optimization_quality():
@@ -102,7 +102,7 @@ def optimize_and_save(input_image_path, output_image_path, optimization_quality)
 
 def run_optimization():
     input_image_path = get_input_image_path()  # Get the path of original imaghe file from user
-    output_folder = get_output_image_path()  # Get the path of folder of optimized image from user
+    output_folder = get_output_folder()  # Get the path of folder of optimized image from user
     optimization_quality = get_optimization_quality()  # Get the integer value of optimization quality from user
 
     input_folder = os.path.dirname(os.path.abspath(input_image_path))  # Get the path of folder of original image
@@ -136,6 +136,8 @@ def run_optimization():
 
         # If new folder will be not created: ask if the original image will be deleted
         else:
+            base_name = make_output_filename(input_image_path)
+            output_image_path = os.path.join(input_folder, base_name)
             print(f"\nImage will be saved at {output_image_path}, overwriting original image.")
 
             while True:
@@ -150,7 +152,7 @@ def run_optimization():
                 temporary_output = make_output_filename(input_image_path, "_optimized")
                 temporary_path = os.path.join(input_folder, temporary_output)
 
-                success = optimize_and_save(input_image_path, output_image_path, optimization_quality)
+                success = optimize_and_save(input_image_path, temporary_path, optimization_quality)
                 if success:
                     os.remove(input_image_path)
                     os.rename(temporary_path, input_image_path)
