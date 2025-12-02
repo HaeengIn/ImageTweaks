@@ -6,7 +6,7 @@ Image Tweaks runs on locally, not requiring an internet connection or cloud uplo
 
 ## Installation
 > Image Tweaks requires <b>Python 3.9</b> up to <b>Python 3.13.9</b>.<br>
->After installing Python, follow these steps to set up the environment.
+> After installing Python, follow these steps to set up the environment.
 1. Clone the repository
     ```bash
     git clone https://github.com/HaeengIn/ImageTweaks
@@ -14,7 +14,7 @@ Image Tweaks runs on locally, not requiring an internet connection or cloud uplo
     ```
 2. Create a virtual environment
     ```bash
-    py <your_python_version> -m venv <your_virtual_environment_name>
+    python -m venv <your_virtual_environment_name>
     ```
 3. Activate the virtual environment
     - Windows
@@ -35,7 +35,8 @@ Image Tweaks runs on locally, not requiring an internet connection or cloud uplo
     ```
 
 ## Copyright
-Copyright of the images in foler "<b>sample_images</b>" is retained by their respective owners. 
+Copyright of the images in foler "<b>sample_images</b>" is retained by their respective owners.<br>
+For more information, please read [COPYRIGHT.md](sample_images/COPYRIGHT.md).
 
 ## License
 Image Tweaks is protected under the CC BY-NC-SA 4.0 license.
