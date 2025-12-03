@@ -70,13 +70,15 @@ def open_wiki():
 
 # Open Info page
 def open_info():
-    print("[ Image Tweaks ]\n" \
+    print("[ Image Tweaks ]\n\n" \
+    "Currently supported process:\n" \
+    "[ Optimize ]\n\n" \
+    "Supported formats:\n" \
+    "[ JPG, JPEG, PNG, WEBP, AVIF ]\n\n" \
     "Version: Alpha 1.0.0\n" \
     "Develop: HaeengIn\n" \
-    "Last Update: 2025-12-03\n" \
-    "\n" \
-    "Press any key to return to the main menu.")
-    input("> ")
+    "Last Update: 2025-12-03")
+    input("\nPress Enter to return to the main menu... ")
     clear_console()
     main()
 
@@ -91,6 +93,7 @@ def exit_app():
             print("Invalid Input. Please enter Y or N.")
     
     if confirm == "y":
+        clear_console()
         sys.exit()
     elif confirm == "n":
         clear_console()
