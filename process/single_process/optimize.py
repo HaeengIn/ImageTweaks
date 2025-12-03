@@ -7,10 +7,10 @@ def make_output_filename(input_image_path, custom_suffix=""):
     name, extension = os.path.splitext(base_name)
     return f"{name}{custom_suffix}{extension}"
 
-# Get the path of original imaghe file from user
+# Get the path of original image file from user
 def get_input_image_path():
     while True:
-        print("\nEnter the path of original image file")
+        print("Enter the path of original image file")
         input_image_path = input("> ").strip().strip('"')
 
         # Check if the file exists
