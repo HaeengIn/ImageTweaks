@@ -1,11 +1,11 @@
 # Image Tweaks
 
 ## Introduction
-<b>Image Tweaks</b> enables you to easily optimize, convert, resize images using CLI.<br>
+**Image Tweaks** enables you to easily optimize, convert, resize images using CLI.<br>
 Image Tweaks runs on locally, not requiring an internet connection or cloud upload.
 
 ## Installation
-> Image Tweaks requires <b>Python 3.9</b> up to <b>Python 3.13.9</b>.<br>
+> Image Tweaks requires **Python 3.9** up to **Python 3.13.9**.<br>
 > After installing Python, follow these steps to set up the environment.
 1. Clone the repository
     ```bash
@@ -34,8 +34,11 @@ Image Tweaks runs on locally, not requiring an internet connection or cloud uplo
     python app.py
     ```
 
+## FAQ
+Please check [Image Tweaks Ofiicial Wiki](https://messy-yak-716.notion.site/Image-Tweaks-Official-Wiki-2b96afdf1918807f8063f42a75ba5cbd) for frequently asked questions.
+
 ## Copyright
-Copyright of the images in foler "<b>sample_images</b>" is retained by their respective owners.<br>
+Copyright of the images in foler "**sample_images**" is retained by their respective owners.<br>
 For more information, please read [COPYRIGHT.md](sample_images/COPYRIGHT.md).
 
 ## License
