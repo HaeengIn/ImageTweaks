@@ -1,4 +1,4 @@
-import process, os, sys, webbrowser, importlib
+import process, os, sys, webbrowser, importlib, json
 
 def clear_console():
     os.system("cls" if os.name == "nt" else "clear")
@@ -82,14 +82,21 @@ def open_wiki():
 
 # Open Info page
 def open_info():
+    with open("version.json", "r", encoding="utf-8") as version_file:
+        version_data = json.load(version_file)
+
+    version = version_data.get("version")
+    revision = version_data.get("revision")
+    last_update = version_data.get("last_update")
+
     print("[ Image Tweaks ]\n\n" \
     "Currently supported process:\n" \
     "[ Optimize ]\n\n" \
     "Supported formats:\n" \
     "[ JPG, JPEG, PNG, WEBP, AVIF ]\n\n" \
-    "Version: Alpha 1.0.0\n" \
-    "Develop: HaeengIn\n" \
-    "Last Update: 2025-12-03")
+    f"Version: {version}\n" \
+    f"Revision: {revision}\n" \
+    f"Last Update: {last_update}")
     input("\nPress Enter to return to the main menu... ")
     clear_console()
     main()
