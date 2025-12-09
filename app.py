@@ -20,7 +20,7 @@ def run_single_process():
     if input_process:
         clear_console()
         while True:
-            module_path = f"process.single.{input_process}"
+            module_path = f"process.single_process.{input_process}"
             module = importlib.import_module(module_path)
 
             function_name = f"run_{input_process}"
@@ -42,7 +42,7 @@ def run_single_process():
             elif another_process == "n":
                 clear_console()
                 break
-            
+
         main()
 
 # Run the multiple process
