@@ -1,4 +1,4 @@
-import process, os, sys, webbrowser
+import process, os, sys, webbrowser, importlib
 
 def clear_console():
     os.system("cls" if os.name == "nt" else "clear")
@@ -7,30 +7,42 @@ def clear_console():
 def run_single_process():
     print("[ Single Process ]")
     print("Select process from the menu below.")
-    print("[ Optimize ]")
+    print("[ Optimize, Convert ]")
     while True:
         input_process = input("> ").strip().lower()
-        if input_process in ["optimize"]:
+        if input_process in ["optimize", "convert"]:
             break
         else:
             print("Invalid Input.")
-    if input_process == "optimize":
+    
+    clear_console()
+
+    if input_process:
         clear_console()
         while True:
-            process.single.optimize.run_optimization()
+            module_path = f"process.single.{input_process}"
+            module = importlib.import_module(module_path)
+
+            function_name = f"run_{input_process}"
+            function = getattr(module, function_name)
+
+            function()
+
             while True:
-                print("\nDo you want to optimize another image? (Y/N)")
-                another_optimization = input("> ").strip().lower()
-                if another_optimization in ["y", "n"]:
+                print(f"\nDo you want to {input_process} another image? (Y/N)")
+                another_process = input("> ").strip().lower()
+                if another_process in ["y", "n"]:
                     break
                 else:
                     print("Invalid Input. Please enter Y or N.")
-            if another_optimization == "y":
+
+            if another_process == "y":
                 clear_console()
                 continue
-            elif another_optimization == "n":
+            elif another_process == "n":
                 clear_console()
                 break
+            
         main()
 
 # Run the multiple process
