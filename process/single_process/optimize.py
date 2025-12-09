@@ -100,7 +100,7 @@ def optimize_and_save(input_image_path, output_image_path, optimization_quality)
         print(f"Error occurred while optimizing image: {e}")
         return False
 
-def run_optimization():
+def run_optimize():
     input_image_path = get_input_image_path()  # Get the path of original imaghe file from user
     output_folder = get_output_folder()  # Get the path of folder of optimized image from user
     optimization_quality = get_optimization_quality()  # Get the integer value of optimization quality from user

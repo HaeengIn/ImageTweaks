@@ -59,7 +59,7 @@ def calculate_total_size(folder_path):
     return total
 
 # Main process
-def run_optimization():
+def run_optimize():
     input_folder_path = get_input_folder_path()
     output_folder_path = get_output_folder_path()
     optimization_quality = get_optimization_quality()
