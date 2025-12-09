@@ -91,9 +91,9 @@ def open_info():
 
     print("[ Image Tweaks ]\n\n" \
     "Currently supported process:\n" \
-    "[ Optimize ]\n\n" \
+    "[ Optimize, Convert ]\n\n" \
     "Supported formats:\n" \
-    "[ JPG, JPEG, PNG, WEBP, AVIF ]\n\n" \
+    "[ JPG, JPEG, PNG, WEBP ]\n\n" \
     f"Version: {version}\n" \
     f"Revision: {revision}\n" \
     f"Last Update: {last_update}")
