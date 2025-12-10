@@ -8,12 +8,13 @@ def convert_and_save(input_image_path, output_folder, target_format):
 
     with Image.open(input_image_path) as img:
         if target_format in ["jpg", "jpeg"]:
+            target_format = "JPEG"
             img = img.convert("RGB")
 
         img.save(output_image_path, format=target_format)
 
 def get_input_image_path():
-    print("Enter the path of the original image.")
+    print("\nEnter the path of the original image.")
     while True:
         input_image_path = input("> ").strip().strip('"').strip("'").lower()
         if not os.path.isfile(input_image_path):
@@ -23,7 +24,7 @@ def get_input_image_path():
     return input_image_path
 
 def get_output_folder():
-    print("Enter the output folder where converted image will be saved.")
+    print("\nEnter the output folder where converted image will be saved.")
     while True:
         output_folder = input("> ").strip().strip('"').strip("'")
         if output_folder in ["", "/"]:
@@ -39,7 +40,7 @@ def get_target_format():
         target_format = input("> ").strip().strip(".").lower()
         if target_format == "formats":
             print("[ Supported Formats ]\n"
-            "[ JPG, JPEG, PNG, WEBP ]")
+            "[ JPG, JPEG, PNG, WEBP ]\n")
             continue
         if target_format not in ["png", "jpg", "jpeg", "webp"]:
             print(f"Invalid command or Unsupported format: {target_format}")
@@ -73,6 +74,7 @@ def run_convert():
 
             with Image.open(input_image_path) as img:
                 if target_format in ["jpg", "jpeg"]:
+                    target_format = "JPEG"
                     img = img.convert("RGB")
                 img.save(temp_path, format=target_format)
 
