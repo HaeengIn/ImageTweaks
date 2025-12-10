@@ -82,18 +82,19 @@ def open_wiki():
 
 # Open Info page
 def open_info():
-    with open("version.json", "r", encoding="utf-8") as version_file:
-        version_data = json.load(version_file)
+    with open("info.json", "r", encoding="utf-8") as info_file:
+        info_data = json.load(info_file)
 
-    version = version_data.get("version")
-    revision = version_data.get("revision")
-    last_update = version_data.get("last_update")
+    version = info_data.get("version")
+    revision = info_data.get("revision")
+    last_update = info_data.get("last_update")
+    supported_formats = info_data.get("supported_formats", [])
 
     print("[ Image Tweaks ]\n\n" \
     "Currently supported process:\n" \
     "[ Optimize, Convert ]\n\n" \
     "Supported formats:\n" \
-    "[ JPG, JPEG, PNG, WEBP ]\n\n" \
+    f"[ {', '.join(supported_formats).upper()} ]\n\n" \
     f"Version: {version}\n" \
     f"Revision: {revision}\n" \
     f"Last Update: {last_update}")
