@@ -18,7 +18,6 @@ def run_single_process():
     clear_console()
 
     if input_process:
-        clear_console()
         while True:
             module_path = f"process.single_process.{input_process}"
             module = importlib.import_module(module_path)
@@ -49,17 +48,26 @@ def run_single_process():
 def run_multiple_process():
     print("[ Multiple Process ]")
     print("Select process from the menu below.")
-    print("[ Optimize ]")
+    print("[ Optimize, Convert ]")
     while True:
         input_process = input("> ").strip().lower()
-        if input_process in ["optimize"]:
+        if input_process in ["optimize", "convert"]:
             break
         else:
             print("Invalid Input.")
-    if input_process == "optimize":
-        clear_console()
+
+    clear_console()
+
+    if input_process:
         while True:
-            process.multiple.optimize.run_optimization()
+            module_path = f"process.multiple_process.{input_process}"
+            module = importlib.import_module(module_path)
+
+            function_name = f"run_{input_process}"
+            function = getattr(module, function_name)
+
+            function()
+
             while True:
                 print("\nDo you want to optimize another folder? (Y/N)")
                 another_optimization = input("> ").strip().lower()
@@ -67,6 +75,7 @@ def run_multiple_process():
                     break
                 else:
                     print("Invalid Input. Please enter Y or N.")
+
             if another_optimization == "y":
                 clear_console()
                 continue
