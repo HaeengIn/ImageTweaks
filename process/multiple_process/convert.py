@@ -17,7 +17,6 @@ def convert_and_save(input_file_path, output_folder, target_format):
                 img = img.convert("RGB")
 
             img.save(output_image_path, format=target_format)
-            print(f"Converted: {os.path.basename(input_file_path)} -> {os.path.basename(output_image_path)}")
     except Exception as e:
         print(f"Error converting {os.path.basename(input_file_path)}: {e}")
 
@@ -27,14 +26,14 @@ def get_input_folder():
     while True:
         input_folder = input("> ").strip().strip('"').strip("'")
         if not os.path.isdir(input_folder):
-            print(f"Cannot find the folder from: {input_folder}")
+            print(f"Cannot find the folder from: {input_folder}\n")
             continue
         break
     return input_folder
 
 # Get the path of the folder where converted images will be saved
 def get_output_folder():
-    print("Enter the output folder where converted images will be saved.")
+    print("\nEnter the output folder where converted images will be saved.")
     while True:
         output_folder = input("> ").strip().strip('"').strip("'")
 
@@ -60,11 +59,11 @@ def get_target_format():
     supported_formats = info_data.get("supported_formats", ["jpg", "jpeg", "png", "webp"])
 
     print("\nEnter the target image format." \
-    " Enter 'Formats' to see supported formats.")
+    "\nEnter 'Formats' to see supported formats.")
     while True:
         target_format = input("> ").strip().strip(".").lower()
         if target_format == "formats":
-            print(f"\n[ Supported Formats ]\n[ {', '.join(supported_formats).upper()} ]")
+            print(f"\n[ Supported Formats ]\n[ {', '.join(supported_formats).upper()} ]\n")
             continue
         elif target_format not in supported_formats:
             print(f"\nInvalid command or Unsupported format: {target_format}")
@@ -93,7 +92,7 @@ def run_convert():
     
     # If the path of input folder and out folder are same: ask if make subfolder
     if os.path.abspath(input_folder) == os.path.abspath(output_folder):
-        print("Do you want to make a subfolder? (Y/N)")
+        print("\nDo you want to make a subfolder? (Y/N)")
         while True:
             subfolder = input("> ").strip().lower()
             if subfolder not in ["y", "n"]:
@@ -120,7 +119,7 @@ def run_convert():
 
         # If user does not want to make a subfolder: ask if overwrite original images
         else:
-            print("Do you want to overwrite the original images? (Y/N)")
+            print("\nDo you want to overwrite the original images? (Y/N)")
             while True:
                 overwrite = input("> ").strip().lower()
                 if overwrite not in ["y", "n"]:
@@ -161,8 +160,9 @@ def run_convert():
             
             # If user does not want to overwrite original images: convert and save (into the same folder, risking name conflicts)
             else:
-                print_divider()
                 print("Warning: If the target file already exists in this folder, the conversion will be skipped to prevent unexpected overwriting.")
+                
+                print_divider()
                 
                 for file in os.listdir(input_folder):
                     if file.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
@@ -189,11 +189,9 @@ def run_convert():
                 input_image_path = os.path.join(input_folder, file)
                 convert_and_save(input_image_path, output_folder, target_format)
 
-    print_divider()
-
     unique_extensions = list(original_extensions)
     sorted_extensions = sorted(unique_extensions, key = lambda x: sort_order.index(x) if x in sort_order else len(sort_order))
     output_extensions_str = ', '.join(sorted_extensions)
 
-    print("Successfully Converted!")
+    print("\nSuccessfully Converted!")
     print(f"{output_extensions_str.upper()} --> {target_format.upper()}")
