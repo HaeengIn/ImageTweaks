@@ -4,21 +4,28 @@ import os, json
 def print_divider():
     print()
     print("-" * 30)
+    print()
 
 # Convert image to target format and save
 def convert_and_save(input_file_path, output_folder, target_format):
-    file_name = os.path.splitext(os.path.basename(input_file_path))[0]
+    file_name, extension = os.path.splitext(os.path.basename(input_file_path))
+    extension = extension.strip(".").lower()
     output_image_path = os.path.join(output_folder, f"{file_name}.{target_format}")
+
+    # If the format of original image is same as target format: skip conversion
+    if extension == target_format:
+        return False
 
     try:
         with Image.open(input_file_path) as img:            
             if target_format in ["jpg", "jpeg"]:
-                target_format = "JPEG"
+                target_format = "jpeg"
                 img = img.convert("RGB")
-
             img.save(output_image_path, format=target_format)
+        return True
     except Exception as e:
         print(f"Error converting {os.path.basename(input_file_path)}: {e}")
+        return False
 
 # Get the path of the folder where images are saved
 def get_input_folder():
@@ -49,11 +56,8 @@ def get_target_format():
     try:
         with open("info.json", "r") as info_file:
             info_data = json.load(info_file)
-    except FileNotFoundError:
-        print("Warning: info.json not found. Using default supported formats.")
-        info_data = {"supported_formats": ["jpg", "jpeg", "png", "webp"]}
-    except json.JSONDecodeError:
-        print("Warning: info.json is corrupted. Using default supported formats.")
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("\nWarning: info.json not found or corrupted. Using default supported formats.")
         info_data = {"supported_formats": ["jpg", "jpeg", "png", "webp"]}
 
     supported_formats = info_data.get("supported_formats", ["jpg", "jpeg", "png", "webp"])
@@ -87,7 +91,7 @@ def run_convert():
             info_data = json.load(info_file)
         sort_order = [fmt.upper() for fmt in info_data.get("supported_formats", [])]
     except (FileNotFoundError, json.JSONDecodeError):
-        print("Warning: Failed to load info.json for dynamic sorting order. Using default order.")
+        print("\nWarning: Failed to load info.json for dynamic sorting order. Using default order.")
         sort_order = [ "JPG", "JPEG", "PNG", "WEBP" ]
     
     # If the path of input folder and out folder are same: ask if make subfolder
@@ -110,12 +114,12 @@ def run_convert():
 
             for file in os.listdir(input_folder):
                 if file.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
-                    # Collect original extension
                     _, ext = os.path.splitext(file)
-                    original_extensions.add(ext[1:].upper())
-                    
                     input_image_path = os.path.join(input_folder, file)
-                    convert_and_save(input_image_path, output_folder, target_format)
+
+                    # Add only if conversion is actually performed
+                    if convert_and_save(input_image_path, output_folder, target_format):
+                        original_extensions.add(ext[1:].upper())
 
         # If user does not want to make a subfolder: ask if overwrite original images
         else:
@@ -133,65 +137,58 @@ def run_convert():
 
                 for file in os.listdir(input_folder):
                     if file.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
-                        # Collect original extension
                         _, ext = os.path.splitext(file)
-                        original_extensions.add(ext[1:].upper())
-                        
                         input_image_path = os.path.join(output_folder, file)
-
                         original_name, _ = os.path.splitext(os.path.basename(input_image_path))
                         temp_path = os.path.join(output_folder, f"{original_name}_temp.{target_format}")
 
                         try:
                             with Image.open(input_image_path) as img:
-                                
                                 if target_format in ["jpg", "jpeg"]:
-                                    target_format = "JPEG"
+                                    target_format = "jpeg"
                                     img = img.convert("RGB")
-
                                 img.save(temp_path, format=target_format)
 
                             # Replace original file with the new one
                             os.remove(input_image_path)
                             final_path = os.path.join(output_folder, f"{original_name}.{target_format}")
                             os.rename(temp_path, final_path)
+
+                            # Add only if conversion is actually performed
+                            if ext[1:].lower() != target_format:
+                                original_extensions.add(ext[1:].upper())
                         except Exception as e:
                             print(f"Error during overwrite process for {file}: {e}")
-            
+                            
             # If user does not want to overwrite original images: convert and save (into the same folder, risking name conflicts)
             else:
-                print("Warning: If the target file already exists in this folder, the conversion will be skipped to prevent unexpected overwriting.")
-                
+                print("\nWarning: If the target file already exists in this folder, the conversion will be skipped to prevent unexpected overwriting.")
                 print_divider()
                 
                 for file in os.listdir(input_folder):
                     if file.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
-                        # Collect original extension
                         _, ext = os.path.splitext(file)
-                        original_extensions.add(ext[1:].upper())
-                        
-                        input_image_path = os.path.join(input_folder, file)                        
-                        convert_and_save(input_image_path, output_folder, target_format)
+                        input_image_path = os.path.join(input_folder, file)
+                        if convert_and_save(input_image_path, output_folder, target_format):
+                            original_extensions.add(ext[1:].upper())
 
-    # If the path of input folder and out folder are different: convert and save
     else:
         print_divider()
 
+        # Make output folder if it does not exist
         if not os.path.isdir(output_folder):
             os.makedirs(output_folder, exist_ok=True)
 
         for file in os.listdir(input_folder):
             if file.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
-                # Collect original extension
                 _, ext = os.path.splitext(file)
-                original_extensions.add(ext[1:].upper())
-                
                 input_image_path = os.path.join(input_folder, file)
-                convert_and_save(input_image_path, output_folder, target_format)
+                if convert_and_save(input_image_path, output_folder, target_format):
+                    original_extensions.add(ext[1:].upper())
 
     unique_extensions = list(original_extensions)
     sorted_extensions = sorted(unique_extensions, key = lambda x: sort_order.index(x) if x in sort_order else len(sort_order))
     output_extensions_str = ', '.join(sorted_extensions)
 
-    print("\nSuccessfully Converted!")
+    print("Successfully Converted!")
     print(f"{output_extensions_str.upper()} --> {target_format.upper()}")
