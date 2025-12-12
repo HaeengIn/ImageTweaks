@@ -41,7 +41,7 @@ def overwrite_image():
             return False
 
 def get_input_image_path():
-    print("\nEnter the path of the original image.")
+    print("Enter the path of the original image.")
     while True:
         input_image_path = input("> ").strip().strip('"').strip("'").lower()
         if not os.path.isfile(input_image_path):
