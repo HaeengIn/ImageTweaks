@@ -13,6 +13,19 @@ def convert_and_save(input_image_path, output_folder, target_format):
 
         img.save(output_image_path, format=target_format)
 
+# Ask if user wants to make a subfolder
+def make_subfolder():
+    print("Do you want to create a subfolder? (Y/N)")
+    while True:
+        subfolder = input("> ").strip().lower()
+        if subfolder not in ["y", "n"]:
+            print("Invalid Input. Please enter Y or N.")
+            continue
+        elif subfolder == "y":
+            return True
+        else:
+            return False
+
 def get_input_image_path():
     print("\nEnter the path of the original image.")
     while True:
