@@ -15,13 +15,27 @@ def convert_and_save(input_image_path, output_folder, target_format):
 
 # Ask if user wants to make a subfolder
 def make_subfolder():
-    print("Do you want to create a subfolder? (Y/N)")
+    print("\nDo you want to create a subfolder? (Y/N)")
     while True:
         subfolder = input("> ").strip().lower()
         if subfolder not in ["y", "n"]:
             print("Invalid Input. Please enter Y or N.")
             continue
         elif subfolder == "y":
+            return True
+        else:
+            return False
+
+# Ask if user wants to overwrite original image
+def overwrite_image():
+    print("\nDo you want to overwrite the original image? (Y/N)")
+    while True:
+        overwrite = input("> ").strip().lower()
+        if overwrite not in ["y", "n"]:
+            print("Invalid Input. Please enter Y or N.")
+            continue
+        elif overwrite == "y":
+            print("\nWarning: Overwriting original images might cause data loss.")
             return True
         else:
             return False
@@ -47,12 +61,12 @@ def get_output_folder():
     return output_folder
 
 def get_target_format():
-    print("Enter the target image format.\n" \
+    print("\nEnter the target image format.\n" \
     "Enter 'Formats' to see supported formats.")
     while True:
         target_format = input("> ").strip().strip(".").lower()
         if target_format == "formats":
-            print("[ Supported Formats ]\n"
+            print("\n[ Supported Formats ]\n"
             "[ JPG, JPEG, PNG, WEBP ]\n")
             continue
         if target_format not in ["png", "jpg", "jpeg", "webp"]:
@@ -71,41 +85,39 @@ def run_convert():
 
     # If the folder of original image and output folder are the same: ask if overwirte original image
     if input_folder == output_folder:
-        print("Do you want to overwrite the original image? (Y/N)")
-        while True:
-            overwrite = input("> ").strip().lower()
-            if overwrite not in ["y", "n"]:
-                print("Invalid Input. Please enter Y or N.")
-                continue
-            break
+        subfolder = make_subfolder()
+        if subfolder == True:
+            os.makedirs(os.path.join(input_folder, "Converted Images"), exist_ok=True)
+            output_folder = os.path.join(input_folder, "Converted Images")
 
-        original_name, _ = os.path.splitext(os.path.basename(input_image_path))
-
-        # If user wants to overwrite original image: save converted image as temporary, delete original image, and rename temporary image
-        if overwrite == "y":
-            temp_path = os.path.join(output_folder, f"{original_name}_temp.{target_format}")
-
-            with Image.open(input_image_path) as img:
-                if target_format in ["jpg", "jpeg"]:
-                    target_format = "JPEG"
-                    img = img.convert("RGB")
-                img.save(temp_path, format=target_format)
-
-            os.remove(input_image_path)
-            final_path = os.path.join(output_folder, f"{original_name}.{target_format}")
-            os.rename(temp_path, final_path)
-
-        # If user does not want to overwrite original image: convert and save to output folder
-        else:
             convert_and_save(input_image_path, output_folder, target_format)
+        else:
+            overwrite = overwrite_image()
+            if overwrite == True:
+                # 원본 파일 이름 추출하기
+                # 임시 파일 이름 붙여서 저장하고
+                # 원본 파일 삭제하고
+                # 임시 파일 이름을 원본 파일 이름으로 변경하기
 
-    # If the folder of original image and output folder are different: convert and save to output folder
+                original_name, _ = os.path.splitext(os.path.basename(input_image_path))
+                temp_image_path = f"{original_name}_tmp.{target_format}"
+                output_folder = os.path.join(input_folder, temp_image_path)
+                convert_and_save(input_image_path, output_folder, target_format)
+
+                os.remove(input_image_path)
+                final_output_path = os.path.join(input_folder, f"{original_name}.{target_format}")
+                os.rename(output_folder, final_output_path)
+            else:
+                # 그냥 저장하기
+                convert_and_save(input_image_path, output_folder, target_format)
     else:
+        os.makedirs(output_folder, exist_ok=True)
         convert_and_save(input_image_path, output_folder, target_format)
 
     print("Successfully Converted!")
     print(f"{original_extension} --> {target_format}")
 
 """
-서브 폴더 만들거냐고 물어보는거 추가해야함
+102 ~ 105 수정
+conver_and_save 함수 수정
 """
