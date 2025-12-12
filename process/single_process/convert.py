@@ -2,15 +2,11 @@ from PIL import Image
 import os
 
 # Convert image to target format and save
-def convert_and_save(input_image_path, output_folder, target_format):
-    base_name = os.path.splitext(os.path.basename(input_image_path))[0]
-    output_image_path = os.path.join(output_folder, f"{base_name}.{target_format}")
-
+def convert_and_save(input_image_path, output_image_path, target_format):
     with Image.open(input_image_path) as img:
         if target_format in ["jpg", "jpeg"]:
             target_format = "JPEG"
             img = img.convert("RGB")
-
         img.save(output_image_path, format=target_format)
 
 # Ask if user wants to make a subfolder
