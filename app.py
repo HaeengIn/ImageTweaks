@@ -3,11 +3,22 @@ import process, os, sys, webbrowser, importlib, json
 def clear_console():
     os.system("cls" if os.name == "nt" else "clear")
 
+with open("info.json", "r", encoding="utf-8") as info_file:
+    info_data = json.load(info_file)
+    version = info_data.get("version")
+    revision = info_data.get("revision")
+    last_update = info_data.get("last_update")
+    supported_formats = info_data.get("supported_formats", [])
+    supported_process = info_data.get("supported_process", [])
+
+
 # Run the single process
 def run_single_process():
+    global supported_process
+
     print("[ Single Process ]")
     print("Select process from the menu below.")
-    print("[ Optimize, Convert ]")
+    print(f"[ {', '.join(supported_process)} ]")
     while True:
         input_process = input("> ").strip().lower()
         if input_process in ["optimize", "convert"]:
@@ -46,9 +57,11 @@ def run_single_process():
 
 # Run the multiple process
 def run_multiple_process():
+    global supported_process
+
     print("[ Multiple Process ]")
     print("Select process from the menu below.")
-    print("[ Optimize, Convert ]")
+    print(f"[ {', '.join(supported_process)} ]")
     while True:
         input_process = input("> ").strip().lower()
         if input_process in ["optimize", "convert"]:
@@ -91,19 +104,13 @@ def open_wiki():
 
 # Open Info page
 def open_info():
-    with open("info.json", "r", encoding="utf-8") as info_file:
-        info_data = json.load(info_file)
-
-    version = info_data.get("version")
-    revision = info_data.get("revision")
-    last_update = info_data.get("last_update")
-    supported_formats = info_data.get("supported_formats", [])
+    global version, revision, last_update, supported_formats, supported_process  
 
     print("[ Image Tweaks ]\n\n" \
     "Currently supported process:\n" \
-    "[ Optimize, Convert ]\n\n" \
+    f"[ {", ".join(supported_process)} ]\n\n" \
     "Supported formats:\n" \
-    f"[ {', '.join(supported_formats).upper()} ]\n\n" \
+    f"[ {", ".join(supported_formats).upper()} ]\n\n" \
     f"Version: {version}\n" \
     f"Revision: {revision}\n" \
     f"Last Update: {last_update}")
