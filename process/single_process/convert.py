@@ -96,13 +96,12 @@ def run_convert():
                 # 임시 파일 이름을 원본 파일 이름으로 변경하기
 
                 original_name, _ = os.path.splitext(os.path.basename(input_image_path))
-                temp_image_path = f"{original_name}_tmp.{target_format}"
-                output_folder = os.path.join(input_folder, temp_image_path)
-                convert_and_save(input_image_path, output_folder, target_format)
+                output_image_path = os.path.join(input_folder, f"{original_name}_tmp.{target_format}") # Temporary path of converted image
+                convert_and_save(input_image_path, output_image_path, target_format)
 
                 os.remove(input_image_path)
                 final_output_path = os.path.join(input_folder, f"{original_name}.{target_format}")
-                os.rename(output_folder, final_output_path)
+                os.rename(output_image_path, final_output_path)
             else:
                 # 그냥 저장하기
                 convert_and_save(input_image_path, output_folder, target_format)
