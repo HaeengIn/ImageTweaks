@@ -111,8 +111,7 @@ def open_info():
     f"[ {", ".join(supported_process)} ]\n\n" \
     "Supported formats:\n" \
     f"[ {", ".join(supported_formats).upper()} ]\n\n" \
-    f"Version: {version}\n" \
-    f"Revision: {revision}\n" \
+    f"Version: {version} (r{revision})\n" \
     f"Last Update: {last_update}")
     input("\nPress Enter to return to the main menu... ")
     clear_console()
