@@ -1,6 +1,10 @@
 from PIL import Image
 import os
 
+# Print process divider
+def divide():
+    print("\n" + "-" * 30 + "\n")
+
 # Convert image to target format and save
 def convert_and_save(input_image_path, output_image_path, target_format):
     with Image.open(input_image_path) as img:
@@ -15,7 +19,7 @@ def make_subfolder():
     while True:
         subfolder = input("> ").strip().lower()
         if subfolder not in ["y", "n"]:
-            print("Invalid Input. Please enter Y or N.")
+            print("\nInvalid Input. Please enter Y or N.")
             continue
         elif subfolder == "y":
             return True
@@ -28,7 +32,7 @@ def overwrite_image():
     while True:
         overwrite = input("> ").strip().lower()
         if overwrite not in ["y", "n"]:
-            print("Invalid Input. Please enter Y or N.")
+            print("\nInvalid Input. Please enter Y or N.")
             continue
         elif overwrite == "y":
             print("\nWarning: Overwriting original images might cause data loss.")
@@ -41,7 +45,7 @@ def get_input_image_path():
     while True:
         input_image_path = input("> ").strip().strip('"').strip("'").lower()
         if not os.path.isfile(input_image_path):
-            print(f"Cannot find the original file from: {input_image_path}")
+            print(f"\nCannot find the original file from: {input_image_path}")
             continue
         break
     return input_image_path
@@ -51,7 +55,7 @@ def get_output_folder():
     while True:
         output_folder = input("> ").strip().strip('"').strip("'")
         if output_folder in ["", "/"]:
-            print("Cannot save converted image to the root directory.")
+            print("\nCannot save converted image to the root directory.")
             continue
         break
     return output_folder
@@ -66,7 +70,7 @@ def get_target_format():
             "[ JPG, JPEG, PNG, WEBP ]\n")
             continue
         if target_format not in ["png", "jpg", "jpeg", "webp"]:
-            print(f"Invalid command or Unsupported format: {target_format}")
+            print(f"\nInvalid command or Unsupported format: {target_format}")
             continue
         break
     return target_format
@@ -77,7 +81,8 @@ def run_convert():
     target_format = get_target_format()
 
     input_folder = os.path.dirname(input_image_path)
-    original_extension = os.path.splitext(input_image_path)[1].strip(".").lower()
+    original_name , original_extension = os.path.splitext(os.path.basename(input_image_path))
+    original_extension = original_extension.strip(".").lower()
 
     # If the folder of original image and output folder are the same: ask if overwirte original image
     if input_folder == output_folder:
@@ -85,34 +90,31 @@ def run_convert():
         if subfolder == True:
             os.makedirs(os.path.join(input_folder, "Converted Images"), exist_ok=True)
             output_folder = os.path.join(input_folder, "Converted Images")
-
-            convert_and_save(input_image_path, output_folder, target_format)
+            output_image_path = os.path.join(output_folder, f"{original_name}.{target_format}")
+            divide()
+            convert_and_save(input_image_path, output_image_path, target_format)
         else:
             overwrite = overwrite_image()
             if overwrite == True:
-                # 원본 파일 이름 추출하기
-                # 임시 파일 이름 붙여서 저장하고
-                # 원본 파일 삭제하고
-                # 임시 파일 이름을 원본 파일 이름으로 변경하기
-
-                original_name, _ = os.path.splitext(os.path.basename(input_image_path))
+                # If user want to overwrite original image: save temporary converted image, delete original image, and rename temporary image
                 output_image_path = os.path.join(input_folder, f"{original_name}_tmp.{target_format}") # Temporary path of converted image
+                divide()
                 convert_and_save(input_image_path, output_image_path, target_format)
 
                 os.remove(input_image_path)
                 final_output_path = os.path.join(input_folder, f"{original_name}.{target_format}")
                 os.rename(output_image_path, final_output_path)
             else:
-                # 그냥 저장하기
-                convert_and_save(input_image_path, output_folder, target_format)
+                # If user doen not want to overwrite originalimage: just save overted image
+                output_image_path = os.path.join(output_folder, f"{original_name}.{target_format}")
+                divide()
+                convert_and_save(input_image_path, output_image_path, target_format)
+    # If the folder of original image and output folder are different: just save converted image
     else:
         os.makedirs(output_folder, exist_ok=True)
-        convert_and_save(input_image_path, output_folder, target_format)
+        output_image_path = os.path.join(output_folder, f"{original_name}.{target_format}")
+        divide()
+        convert_and_save(input_image_path, output_image_path, target_format)
 
     print("Successfully Converted!")
-    print(f"{original_extension} --> {target_format}")
-
-"""
-102 ~ 105 수정
-conver_and_save 함수 수정
-"""
+    print(f"{original_extension.upper()} --> {target_format.upper()}")
