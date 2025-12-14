@@ -34,6 +34,9 @@ Image Tweaks runs on locally, not requiring an internet connection or cloud uplo
     python app.py
     ```
 
+## Change Log
+Please check [CHANGELOG.md](./CHANGELOG.md) for more information.
+
 ## FAQ
 Please check [Image Tweaks Ofiicial Wiki](https://messy-yak-716.notion.site/Image-Tweaks-Official-Wiki-2b96afdf1918807f8063f42a75ba5cbd) for frequently asked questions.
 
