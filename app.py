@@ -161,6 +161,7 @@ def main():
             break
         else:
             print("Invalid Input.")
+            continue
 
 if __name__ == "__main__":
     main()
