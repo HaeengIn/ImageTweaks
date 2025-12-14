@@ -11,11 +11,9 @@ with open("info.json", "r", encoding="utf-8") as info_file:
     supported_formats = info_data.get("supported_formats", [])
     supported_process = info_data.get("supported_process", [])
 
-
 # Run the single process
 def run_single_process():
     global supported_process
-
     print("[ Single Process ]")
     print("Select process from the menu below.")
     print(f"[ {', '.join(supported_process)} ]")
@@ -25,9 +23,7 @@ def run_single_process():
             break
         else:
             print("\nInvalid Input.")
-    
     clear_console()
-
     if input_process:
         while True:
             module_path = f"process.single_process.{input_process}"
@@ -35,7 +31,6 @@ def run_single_process():
 
             function_name = f"run_{input_process}"
             function = getattr(module, function_name)
-
             function()
 
             while True:
@@ -45,20 +40,17 @@ def run_single_process():
                     break
                 else:
                     print("\nInvalid Input. Please enter Y or N.")
-
             if another_process == "y":
                 clear_console()
                 continue
             elif another_process == "n":
                 clear_console()
                 break
-
         main()
 
 # Run the multiple process
 def run_multiple_process():
     global supported_process
-
     print("[ Multiple Process ]")
     print("Select process from the menu below.")
     print(f"[ {', '.join(supported_process)} ]")
@@ -68,9 +60,7 @@ def run_multiple_process():
             break
         else:
             print("\nInvalid Input.")
-
     clear_console()
-
     if input_process:
         while True:
             module_path = f"process.multiple_process.{input_process}"
@@ -78,7 +68,6 @@ def run_multiple_process():
 
             function_name = f"run_{input_process}"
             function = getattr(module, function_name)
-
             function()
 
             while True:
@@ -88,7 +77,6 @@ def run_multiple_process():
                     break
                 else:
                     print("Invalid Input. Please enter Y or N.")
-
             if another_optimization == "y":
                 clear_console()
                 continue
@@ -105,7 +93,6 @@ def open_wiki():
 # Open Info page
 def open_info():
     global version, revision, last_update, supported_formats, supported_process  
-
     print("[ Image Tweaks ]\n\n" \
     "Currently supported process:\n" \
     f"[ {", ".join(supported_process)} ]\n\n" \
@@ -126,7 +113,6 @@ def exit_app():
             break
         else:
             print("\nInvalid Input. Please enter Y or N.")
-    
     if confirm == "y":
         clear_console()
         sys.exit()
