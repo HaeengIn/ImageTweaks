@@ -130,7 +130,7 @@ def exit_app():
     if confirm == "y":
         clear_console()
         sys.exit()
-    elif confirm == "n":
+    else:
         clear_console()
         main()
 
