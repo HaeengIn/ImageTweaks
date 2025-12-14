@@ -24,7 +24,7 @@ def run_single_process():
         if input_process in ["optimize", "convert"]:
             break
         else:
-            print("Invalid Input.")
+            print("\nInvalid Input.")
     
     clear_console()
 
@@ -44,7 +44,7 @@ def run_single_process():
                 if another_process in ["y", "n"]:
                     break
                 else:
-                    print("Invalid Input. Please enter Y or N.")
+                    print("\nInvalid Input. Please enter Y or N.")
 
             if another_process == "y":
                 clear_console()
@@ -67,7 +67,7 @@ def run_multiple_process():
         if input_process in ["optimize", "convert"]:
             break
         else:
-            print("Invalid Input.")
+            print("\nInvalid Input.")
 
     clear_console()
 
@@ -125,7 +125,7 @@ def exit_app():
         if confirm in ["y", "n"]:
             break
         else:
-            print("Invalid Input. Please enter Y or N.")
+            print("\nInvalid Input. Please enter Y or N.")
     
     if confirm == "y":
         clear_console()
@@ -160,7 +160,7 @@ def main():
                 exit_app()
             break
         else:
-            print("Invalid Input.")
+            print("\nInvalid Input.")
             continue
 
 if __name__ == "__main__":
