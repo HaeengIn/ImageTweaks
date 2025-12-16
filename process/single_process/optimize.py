@@ -84,14 +84,18 @@ def optmimize_and_save(input_image_path, output_image_path, quality):
             _, extension = os.path.splitext(input_image_path)
             extension = extension.strip(".").lower()
             if extension in ["jpg", "jpeg"]:
-                if img.mode in ["RGBA", "p"]:
+                if img.mode in ["RGBA", "P"]:
                     img = img.convert("RGB")
+                img.save(output_image_path, quality=quality, optimize=True, format="jpeg")
             elif extension == "png":
-                quality = quality / 100 * 9 # Convert quality to 0 ~ 9
+                compress_level = 9 - int(quality / 100 * 9) # Convert quality to 0 ~ 9
+                print("\nSince the PNG format does not support quality factors, it is natural that the compressed image size will be similar whether you enter a high or low integer.")
+                img.save(output_image_path, compress_level=compress_level, optimize=True, format="png")
+            elif extension == "webp":
+                method = min(6, max(0, round(quality / 100 * 6)))
+                img.save(output_image_path, quality=quality, method=method, optimize=True, format="webp")
             else:
-                quality = str(quality)
-                quality = True
-            img.save(output_image_path, quality)
+                raise ValueError("Unsupported format. Please check supported format from 'Info'.")
     except Exception as e:
         print(f"\nError occured while optmizing image: {e}")
 
@@ -102,7 +106,7 @@ def run_optimize():
     quality = get_quality()
 
     input_folder = os.path.dirname(input_image_path) # Get the name of folder which original image is saved
-    original_name, extension = os.path.splitext(input_image_path)
+    original_name, extension = os.path.splitext(os.path.basename(input_image_path))
     extension = extension.strip(".").lower()
 
     original_size = os.path.getsize(input_image_path) # Get the file size of original image.
@@ -134,12 +138,14 @@ def run_optimize():
             # If user does not want to overwrite original image: add "_optimized" to original image's name, optimize, and save
             else:
                 output_image_path = os.path.join(output_folder, f"{original_name}_optimized.{extension}")
+                divide()
                 optmimize_and_save(input_image_path, output_image_path, quality)
                 optimized_size = os.path.getsize(output_image_path)
     # If the original image's folder and output folder is not same: make output foler, optimize, and save
     else:
         os.makedirs(output_folder, exist_ok=True)
         output_image_path = os.path.join(output_folder, f"{original_name}.{extension}")
+        divide()
         optmimize_and_save(input_image_path, output_image_path, quality)
         optimized_size = os.path.getsize(output_image_path)
     
