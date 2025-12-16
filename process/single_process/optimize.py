@@ -1,175 +1,148 @@
 from PIL import Image
-import os
+import os, json
 
-# Function for making new folder
-def make_output_filename(input_image_path, custom_suffix=""):
-    base_name = os.path.basename(input_image_path)
-    name, extension = os.path.splitext(base_name)
-    return f"{name}{custom_suffix}{extension}"
+with open("info.json", "r", encoding="utf-8") as info_file:
+    info_data = json.load(info_file)
+    unusable_names = info_data.get("unusable_names", [])
 
-# Get the path of original image file from user
-def get_input_image_path():
+# Print divider
+def divide():
+    print("\n" + "-" * 30 + "\n")
+
+# Ask if user wants to make a subfolder
+def make_subfolder():
+    print("\nDo you want to make a subfolder?")
     while True:
-        print("Enter the path of original image file")
+        subfolder = input("> ").strip().lower()
+        if subfolder not in ["y", "n"]:
+            print("\nInvalid Input. Please enter Y or N.")
+            continue
+        if subfolder == "y":
+            return True
+        else:
+            return False
+        
+# Ask if user wants to overwrite original image
+def overwrite_original():
+    print("\nDo you want to overwrite original image?")
+    while True:
+        overwrite = input("> ").strip().lower()
+        if overwrite not in ["y", "n"]:
+            print("\nInvalid Input. Please enter Y or N.")
+            continue
+        if overwrite == "y":
+            print("\nWarning: overwritng image might cause unexpected loss")
+            return True
+        else:
+            return False
+        
+# Get the path of original image from user
+def get_input_image_path():
+    print("Enter the path of original image.")
+    while True:
         input_image_path = input("> ").strip().strip('"')
-
-        # Check if the file exists
         if os.path.isfile(input_image_path):
             return input_image_path
         else:
-            print(f"Invalid Input. Caanot find the image: {input_image_path}")
+            print(f"\nCannot find the image.\nPlease check the path: {input_image_path}\n")
+            continue
 
-# Get the path of output image file
+# Get the path of output folder from user
 def get_output_folder():
+    print("\nEnter the path of the folder where optimized image will be saved.")
     while True:
-        print("\nEnter the path of output image file")
         output_folder = input("> ").strip().strip('"')
-
-        # If user entered nothing or Root Folder
-        if output_folder in ["/", ""]:
-            print("Cannot save optimized image at Root Folder. Please enter other folder.")
+        if output_folder in unusable_names:
+            print("\nCannot save at Root Folder. Please enter other path of folder.")
             continue
-
-        # If user didn't entered folder
-        if os.path.splitext(output_folder)[1] != "":
-            print("Please enter a FOLDER path, not an image path.")
+        elif os.path.splitext(output_folder)[1] != "":
+            print("\nPlease enter a FOLDER path, not a file path.")
             continue
-
-        return output_folder
-
-# Get integer value of optimization quality
-def get_optimization_quality():
-    while True:
-        print("\nEnter the optimization quality (0~100)")
-        optimization_quality = input("> ")
-
-        # Try to convert the input to an integer
-        try:
-            # If the input is an integer: return the value
-            optimization_quality = int(optimization_quality)
-            if 0 <= optimization_quality <= 100:
-                return optimization_quality
-            else:
-                print("Invalid Input. Please enter a integer value betwenn 0 and 100")
-        except ValueError:
-            print("Invalid Input. Please enter a integer value between 0 and 100")
-            continue
-
-# Optimize image and save
-def optimize_and_save(input_image_path, output_image_path, optimization_quality):
-    try:
-        original_size = os.path.getsize(input_image_path)
-        with Image.open(input_image_path) as img:
-
-            # Export extension and convert to lowercase
-            output_extension = os.path.splitext(output_image_path)[1].lower()
-
-            # Reset params that will be used when saving
-            save_params = {"optimize": True}
-            image_to_save = img
-
-            # Process optimization by format
-            if output_extension in (".jpg", ".jpeg"):
-                # JPEG: Use 'quality' params (0-100)
-                # Convert RGBA to RGB when saving as JPEG
-                if img.mode in ("RGBA", "P"):
-                    image_to_save = img.convert("RGB")
-
-                save_params["quality"] = optimization_quality
-
-            elif output_extension == ".png":
-                # PNG: Use 'optimize_level' params (0-9)
-                # Convert quality (0~100) to optimize_level (0~9)
-                optimize_level = int(optimization_quality / 100 * 9)  # Convert to 0~9
-                save_params["optimize_level"] = optimize_level
-
-            else:
-                # Other formats (ex: GIF, BMP, Tiff, etc): ignore 'quality' and apply basic optimization
-                print(f"\n{output_extension} format does not effectively support quality setting. Saving without compression parameters.")
-                image_to_save = img
-
-            # Save image
-            image_to_save.save(output_image_path, **save_params)
-
-            optimized_size = os.path.getsize(output_image_path)
-            print("\nSuccessfully optimized!")
-            print(f"{original_size} bytes --> {optimized_size} bytes")
-            return True
-
-    except Exception as e:
-        print(f"Error occurred while optimizing image: {e}")
-        return False
-
-def run_optimize():
-    input_image_path = get_input_image_path()  # Get the path of original imaghe file from user
-    output_folder = get_output_folder()  # Get the path of folder of optimized image from user
-    optimization_quality = get_optimization_quality()  # Get the integer value of optimization quality from user
-
-    input_folder = os.path.dirname(os.path.abspath(input_image_path))  # Get the path of folder of original image
-
-    # If output folder doesn't same as input folder: make output folder
-    if not input_folder == output_folder:
-        os.makedirs(output_folder, exist_ok=True)
-
-    # If output image path is same as input image path
-    if input_folder == output_folder:
-        while True:
-            print("\nDo you want to make a new folder? (Y/N)")
-            make_new_folder = input("> ").strip().lower()
-            if make_new_folder in ["y", "n"]:
-                break
-            else:
-                print("Invalid Input. Please enter Y or N")
-
-        # If new folder weill be created: ask if the original image will be deleted
-        if make_new_folder == "y":
-            new_folder_name = "Optimized Images"
-            final_output_folder = os.path.join(input_folder, new_folder_name)
-            os.makedirs(final_output_folder, exist_ok=True)
-
-            base_name = make_output_filename(input_image_path)
-            output_image_path = os.path.join(final_output_folder, base_name)
-
-            print(f"\nImage will be saved at '{output_image_path}'.\n")
-            print("-" * 30)
-            optimize_and_save(input_image_path, output_image_path, optimization_quality)
-
-        # If new folder will be not created: ask if the original image will be deleted
         else:
-            base_name = make_output_filename(input_image_path)
-            output_image_path = os.path.join(input_folder, base_name)
-            print(f"\nImage will be saved at {output_image_path}, overwriting original image.")
-
-            while True:
-                print("Delete original image? (Y/N)")
-                delete_original_image = input("> ").strip().lower()
-                if delete_original_image in ["y", "n"]:
-                    break
-                else:
-                    print("Invalid Input. Please enter Y or N.")
-
-            # If original image will be deleted: optimize to temporary file, delete original, and rename temporary file
-            if delete_original_image == "y":
-                temporary_output = make_output_filename(input_image_path, "_optimized")
-                temporary_path = os.path.join(input_folder, temporary_output)
-
-                success = optimize_and_save(input_image_path, temporary_path, optimization_quality)
-                if success:
-                    os.remove(input_image_path)
-                    os.rename(temporary_path, input_image_path)
-                    print("original image has been deleted and replaced successfully.")
-                else:
-                    print("Optimization failed. Original image NOT deleted.")
-
-            # If original image will be not deleted: optimize and save with different name
+            return output_folder
+        
+# Get the integer value of quality from user
+def get_quality():
+    print("\nEnter the quality of your optimized image. (0 ~ 100)")
+    while True:
+        quality = input("> ").strip()
+        try:
+            quality = int(quality)
+            if 0 <= quality <= 100:
+                return quality
             else:
-                output_name = make_output_filename(input_image_path, "_optimized")
-                output_image_path = os.path.join(input_folder, output_name)
-                print(f"Optimized image will be saved as: {output_name}")
-                optimize_and_save(input_image_path, output_image_path, optimization_quality)
+                print("Invalid Input. Please enter a integer value between 0 and 100.")
+                continue
+        except ValueError:
+            print("Please enter a INTEGER value between 0 and 100.")
+            continue
 
-    # If output image path is different from input image path: optimized and save
+# Optimize and save image
+def optmimize_and_save(input_image_path, output_image_path, quality):
+    try:
+        with Image.open(input_image_path) as img:
+            _, extension = os.path.splitext(input_image_path)
+            extension = extension.strip(".").lower()
+            if extension in ["jpg", "jpeg"]:
+                if img.mode in ["RGBA", "p"]:
+                    img = img.convert("RGB")
+            elif extension == "png":
+                quality = quality / 100 * 9 # Convert quality to 0 ~ 9
+            else:
+                quality = str(quality)
+                quality = True
+            img.save(output_image_path, quality)
+    except Exception as e:
+        print(f"\nError occured while optmizing image: {e}")
+
+# Run optimization
+def run_optimize():
+    input_image_path = get_input_image_path()
+    output_folder = get_output_folder()
+    quality = get_quality()
+
+    input_folder = os.path.dirname(input_image_path) # Get the name of folder which original image is saved
+    original_name, extension = os.path.splitext(input_image_path)
+    extension = extension.strip(".").lower()
+
+    original_size = os.path.getsize(input_image_path) # Get the file size of original image.
+
+    # If the original image's folder and output folder is same: ask if user wants to make a subfolder
+    if os.path.abspath(input_folder) == os.path.abspath(output_folder):
+        subfolder = make_subfolder()
+        # If user wants to make a subfolder: make subfolder, optimize, and save image
+        if subfolder == True:
+            output_folder = os.path.join(output_folder, "Optimized Images")
+            os.makedirs(output_folder, exist_ok=True)
+
+            output_image_path = os.path.join(output_folder, f"{original_name}.{extension}")
+            divide()
+            optmimize_and_save(input_image_path, output_image_path, quality)
+            optimized_size = os.path.getsize(output_image_path)
+        # If user does not want to make a subfolder: ask if user wants to overwrite original image
+        else:
+            overwrite = overwrite_original()
+            # If user wants to overwrite original image: save optimized image as temporary, delete original image, and rename temporary image
+            if overwrite == True:
+                output_image_path = os.path.join(output_folder, f"{original_name}_temp.{extension}") # Temporary path of optimized image
+                divide()
+                optmimize_and_save(input_image_path, output_image_path, quality)
+                os.remove(input_image_path)
+                final_output_image_path = os.path.join(input_folder, f"{original_name}.{extension}")
+                os.rename(output_image_path, final_output_image_path)
+                optimized_size = os.path.getsize(final_output_image_path)
+            # If user does not want to overwrite original image: add "_optimized" to original image's name, optimize, and save
+            else:
+                output_image_path = os.path.join(output_folder, f"{original_name}_optimized.{extension}")
+                optmimize_and_save(input_image_path, output_image_path, quality)
+                optimized_size = os.path.getsize(output_image_path)
+    # If the original image's folder and output folder is not same: make output foler, optimize, and save
     else:
-        base_name = make_output_filename(input_image_path)
-        final_output_path = os.path.join(output_folder, base_name)
-        optimize_and_save(input_image_path, final_output_path, optimization_quality)
+        os.makedirs(output_folder, exist_ok=True)
+        output_image_path = os.path.join(output_folder, f"{original_name}.{extension}")
+        optmimize_and_save(input_image_path, output_image_path, quality)
+        optimized_size = os.path.getsize(output_image_path)
+    
+    # Print success message and reduced bytes
+    print("Successfully Optimized!")
+    print(f"{original_size} bytes --> {optimized_size} bytes")
