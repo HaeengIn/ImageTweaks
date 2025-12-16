@@ -1,11 +1,14 @@
 {
-    "version": "Alpha 1.2.1",
-    "revision": 10,
-    "last_update": "25-12-14",
+    "version": "Alpha 1.2.2",
+    "revision": 11,
+    "last_update": "25-12-16",
     "supported_formats": [
         "jpg", "jpeg", "png", "webp"
     ],
     "supported_process": [
         "Optimize", "Convert"
+    ],
+    "unusable_names": [
+        "\\", "/", ":", "*", "?", "\"", "<", ">", "|", ""
     ]
 }
