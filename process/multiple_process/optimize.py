@@ -24,7 +24,16 @@ def make_subfolder():
 
 # Ask if user wants to overwrite original images
 def overwrite_original():
-    pass
+    print("\nDo you want to overwrite the original image? (Y/N)")
+    while True:
+        overwrite = input("> ").strip().lower()
+        if overwrite not in ["y", "n"]:
+            print("\nInvalid Input. Please enter Y or N.")
+            continue
+        elif overwrite == "y":
+            return True
+        else:
+            return False
 
 # Get the path of folder where original images are saved
 def get_input_folder():
