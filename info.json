@@ -8,7 +8,7 @@
     "supported_process": [
         "Optimize", "Convert"
     ],
-    "unusable_names": [
+    "unusable_symbols": [
         "\\", "/", ":", "*", "?", "\"", "<", ">", "|", ""
     ]
 }

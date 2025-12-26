@@ -3,7 +3,7 @@ import os, json
 
 with open("info.json", "r") as info_file:
     info_data = json.load(info_file)
-    supported_formats = info_data.get("supported_formats", [])
+    unusable_symbols = info_data.get("unusable_symbols", [])
 
 # Print divider
 def divide():
