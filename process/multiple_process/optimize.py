@@ -7,7 +7,16 @@ def divide():
 
 # Ask is user wants to make a subfolder
 def make_subfolder():
-    pass
+    print("\nDo you want to make a subfolder? (Y/N)")
+    while True:
+        subfolder = input("> ").strip().lower()
+        if subfolder not in ["y", "n"]:
+            print("\nInvalid Input. Please enter Y or N.")
+            continue
+        elif subfolder == "y":
+            return True
+        else:
+            return False
 
 # Ask if user wants to overwrite original images
 def overwrite_original():
