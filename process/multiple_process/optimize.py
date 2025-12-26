@@ -48,7 +48,16 @@ def get_input_folder():
 
 # Get the path of folder where optimized images will be saved
 def get_output_folder():
-
+    print("\nEnter the output folder where optimized images will be saved.")
+    while True:
+        output_folder = input("> ").strip().strip('"')
+        if output_folder in unusable_symbols:
+            print(f"\nCannot save optimized images to \"{output_folder}\"." \
+                  "\nPlease check the name of folder." \
+                    "Enter 'Unusable symbols' to check which symbols are unusable.")
+            continue
+        break
+    return output_folder
 
 # Get the integer value of quality from user
 def get_quality():
