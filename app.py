@@ -10,6 +10,7 @@ with open("info.json", "r", encoding="utf-8") as info_file:
     last_update = info_data.get("last_update")
     supported_formats = info_data.get("supported_formats", [])
     supported_process = info_data.get("supported_process", [])
+    unusable_symbols = info_data.get("unusable_symbols", [])
 
 # Run the single process
 def run_single_process():
@@ -98,6 +99,8 @@ def open_info():
     f"[ {", ".join(supported_process)} ]\n\n" \
     "Supported formats:\n" \
     f"[ {", ".join(supported_formats).upper()} ]\n\n" \
+    "Unusable symbols:\n" \
+    f"[ {", ".join(unusable_symbols)} ]\n\n"
     f"Version: {version} (r{revision})\n" \
     f"Last Update: {last_update}")
     input("\nPress Enter to return to the main menu... ")
