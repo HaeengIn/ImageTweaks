@@ -37,11 +37,18 @@ def overwrite_original():
 
 # Get the path of folder where original images are saved
 def get_input_folder():
-    pass
+    print("Enter the path of folder where original images are saved.")
+    while True:
+        input_folder = input("> ").strip().strip('"')
+        if not os.path.isdir(input_folder):
+            print(f"Cannot find the folder from: {input_folder}\n")
+            continue
+        break
+    return input_folder
 
 # Get the path of folder where optimized images will be saved
 def get_output_folder():
-    pass
+
 
 # Get the integer value of quality from user
 def get_quality():
