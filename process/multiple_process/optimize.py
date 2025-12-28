@@ -76,8 +76,26 @@ def get_quality():
             continue
 
 # Optimize and save images
-def optimize_and_save(input_folder, output_folder, quality):
-    pass
+def optimize_and_save(input_image_path, output_image_path, quality):
+    try:
+        with Image.open(input_image_path) as img:
+            _, extension = os.path.splitext(input_image_path)
+            extension = extension.strip(".").lower()
+            if extension in ["jpg", "jpeg"]:
+                if img.mode in ["RGBA", "P"]:
+                    img = img.convert("RGB")
+                img.save(output_image_path, quality=quality, optimize=True, format="jpeg")
+            elif extension == "png":
+                compress_level = 9 - int(quality / 100 * 9) # Convert quality to 0 ~ 9
+                print("\nSince the PNG format does not support quality factors, it is natural that the compressed image size will be similar whether you enter a high or low integer.")
+                img.save(output_image_path, compress_level=compress_level, optimize=True, format="png")
+            elif extension == "webp":
+                method = min(6, max(0, round(quality / 100 * 6)))
+                img.save(output_image_path, quality=quality, method=method, optimize=True, format="webp")
+            else:
+                pass
+    except Exception as e:
+        print(f"\nError occured while optimizing image: {e}")
 
 # Run optimization
 def run_optimize():
