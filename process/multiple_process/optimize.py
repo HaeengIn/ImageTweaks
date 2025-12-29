@@ -3,6 +3,7 @@ import os, json
 
 with open("info.json", "r") as info_file:
     info_data = json.load(info_file)
+    supported_formats = info_data.get("suppoerted_formats", [])
     unusable_symbols = info_data.get("unusable_symbols", [])
 
 # Print divider
@@ -24,7 +25,8 @@ def make_subfolder():
 
 # Ask if user wants to overwrite original images
 def overwrite_original():
-    print("\nDo you want to overwrite the original image? (Y/N)")
+    print("\nDo you want to overwrite the original image? (Y/N)" \
+          "\nWarning: overwriting original images might cause a file loss.")
     while True:
         overwrite = input("> ").strip().lower()
         if overwrite not in ["y", "n"]:
@@ -75,6 +77,16 @@ def get_quality():
             print("Please enter a INTEGER value between 0 and 100.")
             continue
 
+# Calculate total size of images in a input folder
+def get_size(folder_path):
+    size = 0
+    for file in os.listdir(folder_path):
+        if file.lower().endswith(tuple(f".{format}" for format in supported_formats)):
+            file_path = os.path.join(folder_path, file)
+            size += os.path.getsize(file_path)
+    return size
+
+
 # Optimize and save images
 def optimize_and_save(input_image_path, output_image_path, quality):
     try:
@@ -92,11 +104,58 @@ def optimize_and_save(input_image_path, output_image_path, quality):
             elif extension == "webp":
                 method = min(6, max(0, round(quality / 100 * 6)))
                 img.save(output_image_path, quality=quality, method=method, optimize=True, format="webp")
-            else:
-                pass
     except Exception as e:
         print(f"\nError occured while optimizing image: {e}")
 
 # Run optimization
 def run_optimize():
-    pass
+    input_folder = get_input_folder()
+    output_folder = get_output_folder()
+    quality = get_quality()
+    original_size = get_size(input_folder)
+
+    # If the path of folder is same: ask if user wants to make a subfolder
+    if os.path.abspath(input_folder) == os.path.abspath(output_folder):
+        subfolder = make_subfolder()
+        # If user wants to make a subfolder: make a subfolder, optimize images, and save
+        if subfolder == True:
+            output_folder = os.path.join(output_folder, "Optimized images")
+            os.makedirs(output_folder, exist_ok=True)
+            for file in os.listdir(input_folder):
+                if file.lower().endswith(tuple(f".{format}" for format in supported_formats)):
+                    input_image_path = os.path.join(input_folder, file)
+                    output_image_path = os.path.join(output_folder, file)
+                    optimize_and_save(input_image_path, output_image_path, quality)
+        # If user does not want to make a subfolder: asf if user wants to overwrite original images
+        else:
+            overwrite = overwrite_original()
+            if overwrite == True:
+                print("\nOverwriting original images may lose original image")
+                for file in os.listdir(input_folder):
+                    if file.lower().endswith(tuple(f".{format}" for format in supported_formats)):
+                        original_name, extension = os.path.splitext(file)
+                        input_image_path = os.path.join(input_folder, file)
+                        temp_image_path = os.path.join(output_folder, f"{original_name}_temp{extension}")
+                        optimize_and_save(input_image_path, temp_image_path, quality)
+                        os.remove(input_image_path)
+                        output_image_path = os.path.join(output_folder, file)
+                        os.rename(temp_image_path, output_image_path)
+            else:
+                for file in os.listdir(input_folder):
+                    if file.lower().endswith(tuple(f".{format}" for format in supported_formats)):
+                        input_image_path = os.path.join(input_folder, file)
+                        output_image_path = os.path.join(output_folder, file)
+                        optimize_and_save(input_image_path, output_image_path, quality)
+
+    # If the path of folder is not same: make a new folder, optimize images, and save
+    else:
+        os.makedirs(output_folder, exist_ok=True)
+        for file in os.listdir(input_folder):
+            if file.lower().endswith(tuple(f".{format}" for format in supported_formats)):
+                input_image_path = os.path.join(input_folder, file)
+                output_image_path = os.path.join(output_folder, file)
+                optimize_and_save(input_image_path, output_image_path, quality)
+    
+    optimize_size = get_size(output_folder)
+    print("Successfully optimized images!")
+    print(f"{original_size} bytes --> {optimize_size} bytes")
