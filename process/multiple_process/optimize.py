@@ -159,3 +159,7 @@ def run_optimize():
     optimize_size = get_size(output_folder)
     print("Successfully optimized images!")
     print(f"{original_size} bytes --> {optimize_size} bytes")
+
+"""
+테스트하고 오류 찾아서 고치기
+"""
