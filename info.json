@@ -1,7 +1,7 @@
 {
-    "version": "Alpha 1.2.2",
-    "revision": 11,
-    "last_update": "25-12-16",
+    "version": "Alpha 1.2.4",
+    "revision": 13,
+    "last_update": "25-12-29",
     "supported_formats": [
         "jpg", "jpeg", "png", "webp"
     ],
